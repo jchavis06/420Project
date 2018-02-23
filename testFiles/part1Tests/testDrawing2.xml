@@ -1,0 +1,38 @@
+<commands
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="part1in.xsd"
+	spatialWidth="4"
+	spatialHeight="4"
+	>
+<createCity name="A" x="1" y="3" radius="1" color="red"/> 
+<mapCity name="A"/>
+<createCity name="B" x="0" y="2" radius="1" color="red"/> 
+<mapCity name="B"/>
+<createCity name="C" x="0" y="3" radius="1" color="blue"/>
+<mapCity name="C"/>
+<createCity name="D" x="0" y="4" radius="1" color="blue"/>
+<mapCity name="D"/>
+<createCity name="E" x="1" y="4" radius="1" color="yellow"/>
+<mapCity name="E"/>
+<createCity name="F" x="3" y="2" radius="1" color="green"/>
+<mapCity name="F"/>
+<createCity name="G" x="2" y="1" radius="1" color="orange"/>
+<mapCity name="G"/>
+<createCity name="H" x="2" y="2" radius="1" color="orange"/>
+<mapCity name="H"/>
+
+<printPRQuadtree/>
+
+<nearestCity x="1" y="2"/>
+<nearestCity x="4" y="4"/>
+<nearestCity x="-2" y="2"/>
+<nearestCity x="6" y="6"/>
+
+<rangeCities x="6" y="2" radius="1"/>
+<rangeCities x="2" y="2" radius="1" saveMap="range1"/>
+<rangeCities x="2" y="2" radius="2"/>
+
+
+
+
+</commands>

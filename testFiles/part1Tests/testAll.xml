@@ -1,0 +1,31 @@
+<commands
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="part1in.xsd"
+  spatialWidth="512"
+  spatialHeight="512">
+ 
+ <printPRQuadtree/> 
+ <listCities sortBy="name"/>
+ <nearestCity x="44" y="44"/>
+ <createCity name="Baltimore" x="76" y="39" radius="5" color="black"/>
+ <createCity name="Baltimore" x="76" y="39" radius="5" color="black"/>
+ <createCity name="Baltimorex" x="76" y="39" radius="5" color="black"/>
+ 
+ <deleteCity name="chicago"/>
+ 
+ <mapCity name="Baltimor"/>
+ <mapCity name="Baltimore"/>
+ <mapCity name="Baltimore"/>
+ 
+ <createCity name="chicago" x="512" y="512" radius="4" color="black"/>
+ <mapCity name="chicago"/>
+ 
+ <unmapCity name="detroit"/>
+ <createCity name="detroit" x="44" y="13" radius="1" color="blue"/>
+ <unmapCity name="detroit"/>
+ 
+ <rangeCities x="1" y="2" radius="5" saveMap="hello"/>
+ <rangeCities x="1" y="2" radius="5"/>
+ 
+ 
+ </commands>

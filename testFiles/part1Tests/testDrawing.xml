@@ -1,0 +1,22 @@
+<commands 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="part1in.xsd"
+	spatialWidth="16"
+	spatialHeight="16"
+	>
+ 
+ <createCity name="Baltimore" x="12" y="8" radius="1" color="red"/> 
+ <createCity name="Chicago" x="10" y="9" radius="1"  color="orange"/>
+ <createCity name="Miami" x="14" y="3" radius="1"  color="blue"/>
+ <createCity name="NY" x="14" y="14" radius="1"  color="purple"/>
+ <createCity name="LA" x="2" y="4" radius="1"  color="black"/>
+ <createCity name="Breckenridge" x="8" y="8" radius="1"  color="green"/>
+ 
+ <mapCity  name="Baltimore"/>
+ <mapCity  name="Chicago"/>
+ <mapCity  name="Miami"/>
+ <mapCity  name="NY"/>
+ <mapCity  name="LA"/>
+ <mapCity  name="Breckenridge"/>     
+ <saveMap name='testDrawing.png'/>
+ </commands>

@@ -1,0 +1,40 @@
+<commands
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="part1in.xsd"
+	spatialWidth="128"
+	spatialHeight="128"
+	>
+ <createCity name="Santiago" x="20" y="90" radius="1" color="red"/> 
+ <createCity name="Santiago" x="20" y="90" radius="1" color="red"/> 
+ <createCity name="Bogota" x="55" y="7" radius="1"  color="orange"/>
+ <createCity name="Quito" x="90" y="40" radius="1"  color="blue"/>
+ <createCity name="LaPaz" x="63" y="30" radius="1" color="blue"/>
+ <createCity name="Montevideo" x="78" y="40" radius="1" color="red"/>
+ <createCity name="SanSalvador" x="88" y="49" radius="1" color="red"/>
+ <createCity name="Lima" x="18" y="91" radius="1" color="blue"/>
+ <createCity name="Tegucigalpa" x="53" y="6" radius="1" color="red"/>
+<mapCity name="Bogota"/>
+<mapCity name="Santiago"/>
+<mapCity name="Quito"/>
+<mapCity name="Montevideo"/>
+<mapCity name="LaPaz"/>
+<mapCity name="SanSalvador"/>
+<mapCity name="Lima"/>
+<mapCity name="Tegucigalpa"/>
+
+
+<mapCity name="BuenosAires"/>
+<createCity name="BuenosAires" x="15" y="90" radius="1" color="yellow"/>
+<mapCity name="BuenosAires"/>
+
+<mapCity name="BuenosAires"/>
+
+<createCity name="Caracas" x="-1" y="54" radius="1" color="red"/>
+<mapCity name="Caracas"/>
+<createCity name="Managua" x="2" y="130" radius="1" color="red"/>
+<mapCity name="Managua"/>
+<createCity name="Havana" x="500" y="-4" radius="1" color="red"/>
+<mapCity name="Havana"/>
+
+<printPRQuadtree/>
+</commands>

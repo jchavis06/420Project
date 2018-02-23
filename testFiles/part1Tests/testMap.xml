@@ -1,0 +1,51 @@
+<commands
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="part1in.xsd"
+ 	spatialWidth="512"
+ 	spatialHeight="512">
+ <createCity name="A" x="25" y="11" radius="1" color="red"/>
+ <createCity name="A" x="12" y="11" radius="1" color="red"/>
+ <createCity name="a" x="25" y="11" radius="1" color="red"/>
+ <createCity name="B" x="12" y="11" radius="1"  color="red"/>
+ <createCity name="C" x="1" y="1" radius="1"  color="black"/>
+ <createCity name="D" x="1" y="20" radius="5"  color="black"/>
+ <listCities sortBy="name"/>
+ <listCities sortBy="coordinate"/>
+ <clearAll/>
+ <listCities sortBy="name"/>
+ <listCities sortBy="coordinate"/>
+ <createCity name="A" x="25" y="11" radius="1" color="red"/>
+ <createCity name="B" x="12" y="11" radius="1"  color="red"/>
+ <createCity name="C" x="1" y="1" radius="1"  color="black"/>
+ <createCity name="D" x="1" y="20" radius="5"  color="black"/>
+ <listCities sortBy="name"/>
+ <listCities sortBy="coordinate"/>
+ <unmapCity name="A"/>
+ <deleteCity name="A"/>
+ <deleteCity name="A"/>
+ <mapCity name="A"/>
+ <unmapCity name="A"/>
+ <deleteCity name="B"/>
+ <deleteCity name="C"/>
+ <deleteCity name="D"/>
+ <deleteCity name="E"/>
+ <unmapCity name="E"/>
+ <listCities sortBy="name"/>
+ <listCities sortBy="coordinate"/>
+ <createCity name="A" x="12" y="0" radius="1" color="red"/>
+ <createCity name="B" x="12" y="11" radius="1"  color="red"/>
+ <createCity name="C" x="1" y="1" radius="1"  color="black"/>
+ <createCity name="D" x="1" y="20" radius="5"  color="black"/>
+
+ 
+ <mapCity name="A"/>
+ <mapCity name="A"/>
+
+ <mapCity name="a"/>
+ <mapCity name="B"/>
+ <mapCity name="C"/>
+ <mapCity name="D"/>
+ <printPRQuadtree/>
+ 
+ 
+</commands>	

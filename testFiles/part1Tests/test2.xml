@@ -1,0 +1,20 @@
+<commands
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="part1in.xsd"
+	spatialWidth="256"
+	spatialHeight="256"
+	>
+ <createCity name="S" x="200" y="200" radius="1" color="red"/> 
+ <createCity name="T" x="100" y="100" radius="1" color="red"/> 
+ <createCity name="X" x="50" y="200" radius="1" color="red"/> 
+ <createCity name="Y" x="30" y="100" radius="1" color="red"/> 
+ <createCity name="Z" x="20" y="20" radius="1" color="red"/> 
+ <createCity name="A" x="100" y="10" radius="1" color="red"/> 
+ <listCities sortBy="name"/> 
+ <mapCity name="S"/> 
+ <mapCity name="T"/> 
+ <mapCity name="X"/> 
+ <mapCity name="Y"/> 
+ <mapCity name="Z"/> 
+ <mapCity name="A"/> 
+</commands>
