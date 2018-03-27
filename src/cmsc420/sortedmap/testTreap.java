@@ -7,5 +7,6 @@ public class testTreap {
 		treap.put(6, 10);
 		treap.put(8, 20);
 		treap.printTreap();
+		System.out.println("lol");
 	} 
 }
