@@ -14,7 +14,7 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 
 	private Comparator<? super K> comp;
 	private int size;
-	private Node<K,V> root;
+	private Node root;
 	private Random rng;
 	
 	public Treap() {
@@ -50,13 +50,15 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 			//throw new IllegalArgumentException();
 			return null;
 		} else {
-			Node<K,V> node = new Node<K,V>(key, value);
+			Node node = new Node(key, value);
 			//newNode is the node after insertion, that way we can re-heapify with parents.
-			Node<K,V> newNode = insertNodeIntoTreap(this.root, node);
+			Node newNode = insertNodeIntoTreap(this.root, node);
+			//System.out.println(newNode.getPriority());
 			if (! (this.root.equals(node))) {
 				//not the first element inserted.
 				reheapify(newNode);
 			}
+			this.size ++;
 			return newNode.getValue();
 		}
 	}
@@ -65,7 +67,7 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 	 * Will recursively add node into the treap
 	 * Returns the node at the end so we can use it and re-heapify.
 	 */
-	private Node<K,V> insertNodeIntoTreap(Node<K,V> root, Node<K,V> node) {
+	private Node insertNodeIntoTreap(Node root, Node node) {
 		if (this.root == null) {
 			this.root = node;
 			return node;
@@ -97,20 +99,19 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 	/**
 	 * Takes a newly inserted node and will re-heapify the treap if necessary.
 	 */
-	private void reheapify(Node<K,V> node) {
+	private void reheapify(Node node) {
 		//start from where node is in the tree, iteratively go up the tree until heap is satisfied
 		boolean heapSatisfied = false;
-		while (node != null && !heapSatisfied) {
-			if (node.parent != null) {
+		while (node != null && node.parent != null && !heapSatisfied) {
 				if (node.getPriority() > node.parent.getPriority()) {
 					//heap property is invalid. Depending on whether node is left/right child,
 					//do proper rotations.
 					if (node.equals(node.parent.left)) {
 						//node is left child. Perform right rotation.
-						node = rightRotation(node);
+						node = rightRotation(node.parent);
 					} else if (node.equals(node.parent.right)) {
 						//node is right child. Perform left rotation
-						node = leftRotation(node);
+						node = leftRotation(node.parent);
 					} else {
 						//insertion didn't go correctly, check error.
 					}
@@ -118,7 +119,6 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 					//we have satisfied the heap property now.
 					heapSatisfied = true;
 				}
-			}
 		}
 	}
 	
@@ -127,8 +127,8 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 	 * Make this node's parent pointer point to the right node.
 	 * Put this node onto the original right node's left subtree.
 	 */
-	private Node<K,V> leftRotation(Node<K,V> node) {
-		Node<K,V> right = node.right;
+	private Node leftRotation(Node node) {
+		Node right = node.right;
 		node.right = right.left;
 		if (right.left != null) {
 			right.left.parent = node;
@@ -136,7 +136,7 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 		right.parent = node.parent;
 		if (node.parent == null) {
 			//right node is the root now.
-			this.root = node.right;
+			this.root = right;
 		} else if (node.equals(node.parent.left)) {
 			//node is left sub child
 			node.parent.left = right;
@@ -146,7 +146,7 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 		}
 		right.left = node;
 		node.parent = right;
-		return node;
+		return node.parent; //we need to return the parent because that is actually the node that was newly inserted.
 	}
 	
 	/*
@@ -155,8 +155,8 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 	 * Make this node's parent pointer point to the left node.
 	 * Put this node onto the original left node's right subtree.
 	 */
-	private Node<K,V> rightRotation(Node<K,V> node) {
-		Node<K,V> left = node.left;
+	private Node rightRotation(Node node) {
+		Node left = node.left;
 		node.left = left.right;
 		if (left.right != null) {
 			left.right.parent = node;
@@ -164,7 +164,7 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 		left.parent = node.parent;
 		if (node.parent == null) {
 			//left is root now.
-			this.root = node.left;
+			this.root = left;
 		} else if (node.equals(node.parent.right)) {
 			//node is right subtree
 			node.parent.right = left;
@@ -190,7 +190,7 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 	 */
 	@Override
 	public K firstKey() {
-		Node<K,V> first = this.getFirstEntry();
+		Node first = this.getFirstEntry();
 		if (first != null) {
 			return first.key;
 		} else {
@@ -203,10 +203,10 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 	 * This returns the node that firstKey() uses.
 	 * @returns first element in treap, or null if treap is empty.
 	 */
-	private Node<K,V> getFirstEntry() {
+	private Node getFirstEntry() {
 		if (this.size != 0) {
-			Node<K,V> temp = root;
-			while (temp != null) {
+			Node temp = root;
+			while (temp.left != null) {
 				temp = temp.left;
 			}
 			return temp;
@@ -221,7 +221,7 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 	 */
 	@Override
 	public K lastKey() {
-		Node<K,V> first = this.getLastEntry();
+		Node first = this.getLastEntry();
 		if (first != null) {
 			return first.key;
 		} else {
@@ -234,9 +234,9 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 	 * This returns the node that lastKey() uses.
 	 * @returns last element in treap, or null if treap is empty.
 	 */
-	private Node<K,V> getLastEntry() {
+	private Node getLastEntry() {
 		if (this.size != 0) {
-			Node<K,V> temp = root;
+			Node temp = root;
 			while (temp != null) {
 				temp = temp.right;
 			}
@@ -255,6 +255,9 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 		return random;
 	}
 	
+	public Node testNode(K key, V val) {
+		return new Node(key, val);
+	}
 	protected class EntrySet extends AbstractSet<Map.Entry<K, V>> implements Set<Map.Entry<K, V>> {
 
 		private Iterator <Map.Entry<K, V>> iterator;
@@ -274,16 +277,17 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 			} else {
 				return new Iterator<Map.Entry<K,V>>() {
 	
-					private Node<K,V> next = Treap.this.getFirstEntry();
+					private Node next = getFirstEntry();
 					
 					@Override
 					public boolean hasNext() {
+						getFirstEntry();
 						return (next != null);
 					}
 	
 					@Override
-					public Node<K,V> next() {
-						Node<K,V> element = this.next;
+					public Map.Entry<K, V> next() {
+						Node element = this.next;
 						if (element == null) {
 							throw new NoSuchElementException();
 						} else {
@@ -313,7 +317,7 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 		//From the part 2 spec
 		public boolean remove(Object o) {
 			@SuppressWarnings("unchecked")
-			Node<K,V> me = (Node<K,V>)o;
+			Node me = (Node)o;
 			boolean b = Treap.this.containsKey(me.getKey());
 			Treap.this.remove(me.getKey());
 			return b;
@@ -322,7 +326,7 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 		//From the part 2 spec
 		public boolean contains(Object o) {
 			@SuppressWarnings("unchecked")
-			Node<K,V> me = (Node<K,V>)o;
+			Node me = (Node)o;
 			return Treap.this.containsKey(me.getKey())
 					&& (me.getValue() == null ? 
 							Treap.this.get(me.getKey()) == null :
@@ -334,13 +338,13 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 	}
 	
 	
-	protected class Node<K,V> implements Map.Entry<K, V> {
+	protected class Node implements Map.Entry<K, V> {
 
 		private K key;
 		private V value;
-		private Node<K,V> left;
-		private Node<K,V> right;
-		private Node<K,V> parent;
+		private Node left;
+		private Node right;
+		private Node parent;
 		private int priorityNum;
 		
 		public Node(K key, V val) {
@@ -383,11 +387,11 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 				return true;
 			}
 			
-			if (!(o instanceof Node)) {
+			if (!(o instanceof Treap.Node)) {
 				return false;
 			}
 			
-			Node<K,V> n = (Node<K,V>)o;
+			Node n = (Node)o;
 			if (n.getKey().equals(this.key) && n.getValue().equals(this.value) && n.priorityNum == this.priorityNum) {
 				return true;
 			} else {
@@ -418,11 +422,11 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 		 */
 		public class SubMapIterator implements Iterator<Map.Entry<K, V>> {
 
-			Node<K,V> next;
+			Node next;
 			
 			public SubMapIterator() {
 				//need to get first element to be between bounds.
-				Node<K,V> first = Treap.this.getFirstEntry();
+				Node first = Treap.this.getFirstEntry();
 				while (Treap.this.comparator().compare(first.getKey(), fromKey) < 0) {
 					first = successor(first);
 				}
@@ -451,7 +455,7 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 
 			@Override
 			public Entry<K, V> next() {
-				Node<K,V> element = this.next;
+				Node element = this.next;
 				if (element != null) {
 					this.next = successor(element);
 					return element;
@@ -504,7 +508,7 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 		public K firstKey() {
 			Iterator<Map.Entry<K, V>> it = new SubMapIterator();
 			if (it.hasNext()) {
-				Node<K,V> node = (Node<K,V>) it.next();
+				Node node = (Node) it.next();
 				return node.getKey();
 			} else {
 				return null;
@@ -514,9 +518,9 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 		
 		public K lastKey() {
 			Iterator<Map.Entry<K, V>> it = new SubMapIterator();
-			Node<K,V> last = null;
+			Node last = null;
 			while (it.hasNext()) {
-				last = (Node<K,V>) it.next();	
+				last = (Node) it.next();	
 			}
 			return last.getKey();
 		}
@@ -531,9 +535,9 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 	 * This method returns this current node's successor, according to an
 	 * in-order traversal. Will return null if node is last in the treap.
 	 */
-	public Node<K,V> successor(Node<K,V> n) {
-		Node<K,V> curr = n;
-		Node<K,V> rightTree = curr.right;
+	public Node successor(Node n) {
+		Node curr = n;
+		Node rightTree = curr.right;
 		//successor will either be in right tree or in one of the ancestor nodes.
 		if (rightTree != null) {
 			//return node all the way to the LEFT in the RIGHT subtree.
@@ -545,7 +549,7 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 		} else {
 			//in one of the ancestors. Specifically the ancestor in which this current node is 
 			//in the left subtree of. 
-			Node<K,V> parent = curr.parent;
+			Node parent = curr.parent;
 			while (parent != null && curr == parent.right) {
 				//move up in treap until parent is null or this node is in the left subtree of parent.
 				curr = parent;
@@ -562,9 +566,11 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 	 */
 	public void printTreap() {
 		inOrder(this.root);
+		System.out.println("Root: " + this.root.getKey());
+		System.out.println("-----------------------");
 	}
 	
-	public void inOrder(Node<K,V> node) {
+	public void inOrder(Node node) {
 		if (node != null) {
 			inOrder(node.left);
 			System.out.println("Key: " + node.getKey() + ", Value: " + node.getValue() + ", Priority: " + node.getPriority());

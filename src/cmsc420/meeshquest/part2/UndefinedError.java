@@ -1,19 +1,21 @@
-package cmsc420.meeshquest.part1;
+package cmsc420.meeshquest.part2;
 import cmsc420.xml.XmlUtility;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-public class FatalError implements XmlOutput{
+public class UndefinedError implements XmlOutput{
 
 	private Document doc;
+	private Element root;
 	
-	public FatalError(Document doc) {
+	public UndefinedError(Document doc, Element root) {
 		this.doc = doc;
+		this.root = root;
 	}
 	public Element printOutput() {
-		Element elt = doc.createElement("fatalError");
+		Element elt = doc.createElement("undefinedError");
 		//doc.appendChild(elt);
 		return elt;
 	}

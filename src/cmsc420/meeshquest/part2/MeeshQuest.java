@@ -1,4 +1,4 @@
-package cmsc420.meeshquest.part1;
+package cmsc420.meeshquest.part2;
 
 import java.io.File;
 import java.io.IOException;
