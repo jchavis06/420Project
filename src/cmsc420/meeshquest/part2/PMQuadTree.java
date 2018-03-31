@@ -1,9 +1,9 @@
 package cmsc420.meeshquest.part2;
 
 import java.awt.Color;
-import java.awt.geom.Rectangle2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeMap;
@@ -409,7 +409,6 @@ public abstract class PMQuadTree {
 	 *
 	 *****************************************************************************************************/
 	public class WhiteNode extends Node {
-
 		public Node add(City c, int x, int y, int height, int width) {
 			return new BlackNode(c, x, y, height, width);
 		}
@@ -473,7 +472,6 @@ public abstract class PMQuadTree {
 		}
 		
 		public Element printNode(Document doc) {
-
 			TreeSet<String> list = neighbors.getNeighbors(city.getName());
 			int cardinality = 1 + list.size();
 			Element blackNode = doc.createElement("black");
@@ -528,8 +526,6 @@ public abstract class PMQuadTree {
 			this.nodes[2] = whiteNode;
 			this.nodes[3] = whiteNode;
 		}
-		
-
 		public Node add(City c, int x, int y, int height, int width) {
 			//need to get the quadrant the city is to be added to.
 			//can be multiple quadrants. Need to check each quadrant to see if they intersect.

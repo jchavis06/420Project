@@ -1,6 +1,5 @@
 package cmsc420.meeshquest.part2;
 
-
 public class PM1QuadTree extends PMQuadTree {
 
 	public PM1QuadTree(int spatialHeight, int spatialWidth) {
