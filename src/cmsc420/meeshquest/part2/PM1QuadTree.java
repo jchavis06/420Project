@@ -1,9 +1,10 @@
 package cmsc420.meeshquest.part2;
 
-public class PM1QuadTree extends PMQuadTree{
-	
-	public PM1QuadTree() {
-		super(new PM1Validator());
+
+public class PM1QuadTree extends PMQuadTree {
+
+	public PM1QuadTree(int spatialHeight, int spatialWidth) {
+		super(new PM1Validator(), spatialHeight, spatialWidth);
 	}
 	
 	private static class PM1Validator implements Validator {

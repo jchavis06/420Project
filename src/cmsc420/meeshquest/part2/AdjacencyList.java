@@ -30,4 +30,25 @@ public class AdjacencyList {
 			neighbors.put(cityB, list);
 		}
 	}
+	
+	/*
+	 * This method checks to see if A is mapped to B or if B is mapped to A
+	 * (Note that we should only have to check if its one or the other since when we map roads we add them to both lists.
+	 */
+	public boolean containsRoad(String cityA, String cityB) {
+		//we already know at this point that both cityA and cityB are in this adjacencyList object
+		TreeSet<String> n1 = neighbors.get(cityA);
+		TreeSet<String> n2 = neighbors.get(cityB);
+		
+		return ((n1.contains(cityB) || (n2.contains(cityA))));
+	}
+	
+	public TreeSet<String> getNeighbors(String city) {
+		if (neighbors.containsKey(city)) {
+			TreeSet<String> list = neighbors.get(city);
+			return list;
+		} else {
+			return null;
+		}
+	}
 }
