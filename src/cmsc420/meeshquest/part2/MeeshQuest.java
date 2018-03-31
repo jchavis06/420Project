@@ -86,23 +86,28 @@ public class MeeshQuest {
     }
     
     public static Element processTag(Document doc, Element root, String tagName, Element node) {
+    	Integer id;
     	XmlOutput output;
+    	int x,y,radius;
+    	String cityName;
     	switch(tagName) {
     	case "createCity": 
-    		String cityName = node.getAttribute("name");
-    		int x = Integer.parseInt(node.getAttribute("x"));
-    		int y = Integer.parseInt(node.getAttribute("y"));
-    		int radius = Integer.parseInt(node.getAttribute("radius"));
+    		cityName = node.getAttribute("name");
+    		x = Integer.parseInt(node.getAttribute("x"));
+    		y = Integer.parseInt(node.getAttribute("y"));
+    		radius = Integer.parseInt(node.getAttribute("radius"));
+    		id = getId(node);
     		String color = node.getAttribute("color");
     		//output = meeshMap.createCity(cityName, x, y, radius, color, doc);
-    		output = pmQuadTree.createCity(cityName, x, y, radius, color, doc);
+    		output = pmQuadTree.createCity(cityName, x, y, radius, color, doc, id);
     		root = output.printOutput();
     		break;
     		
     	case "listCities":
     		String sortBy = node.getAttribute("sortBy");
+    		id = getId(node);
     		//ArrayList<City> cities = meeshMap.listCities(sortBy);
-    		output = pmQuadTree.listCities(sortBy, doc);
+    		output = pmQuadTree.listCities(sortBy, doc, id);
     		root = output.printOutput();
     		break;
     		
@@ -110,80 +115,128 @@ public class MeeshQuest {
     		//System.out.println("Cleared all cities.");
     		//meeshMap.clearAll();
     		pmQuadTree.clearAll();
-    		Success s = new Success(doc, "clearAll");
+    		id = getId(node);
+    		Success s = new Success(doc, "clearAll", id);
     		root = s.printOutput();
     		break;
     	case "mapCity":
-    		String city = node.getAttribute("name");
+    		cityName = node.getAttribute("name");
+    		id = getId(node);
     		//output = meeshMap.mapCity(city, doc);
-    		output = pmQuadTree.mapIsolatedCity(city, doc);
+    		output = pmQuadTree.mapIsolatedCity(cityName, doc, id);
     		root = output.printOutput();
     		break;
     	case "unmapCity":
-    		city = node.getAttribute("name");
+    		cityName = node.getAttribute("name");
+    		id = getId(node);
     		//output = meeshMap.unmapCity(city, doc);
-    		output = pmQuadTree.unmapCity(city, doc);
+    		output = pmQuadTree.unmapCity(cityName, doc, id);
     		root = output.printOutput();
     		break;
     	case "printPRQuadtree":
+    		id = getId(node);
     		//output = meeshMap.printPRQuadTree(doc);
-    		output = pmQuadTree.printPMQuadtree(doc);
+    		output = pmQuadTree.printPMQuadtree(doc, id);
     		root = output.printOutput();
     		break;
     	case "deleteCity":
-    		String c = node.getAttribute("name");
+    		cityName = node.getAttribute("name");
+    		id = getId(node);
     		//output = meeshMap.deleteCity(c, doc);
-    		output = pmQuadTree.deleteCity(c, doc);
+    		output = pmQuadTree.deleteCity(cityName, doc, id);
     		root = output.printOutput();
     		break;
     	case "nearestCity":
-    		int ex = Integer.parseInt(node.getAttribute("x"));
-    		int why = Integer.parseInt(node.getAttribute("y"));
+    		x = Integer.parseInt(node.getAttribute("x"));
+    		y = Integer.parseInt(node.getAttribute("y"));
+    		id = getId(node);
     		//output = meeshMap.nearestCity(ex, why, doc);
-    		output = pmQuadTree.nearestCity(ex, why, doc);
+    		output = pmQuadTree.nearestCity(x, y, doc, id);
     		root = output.printOutput();
     		break;
     	case "rangeCities":
-    		int xx = Integer.parseInt(node.getAttribute("x"));
-    		int yy = Integer.parseInt(node.getAttribute("y"));
+    		x = Integer.parseInt(node.getAttribute("x"));
+    		y = Integer.parseInt(node.getAttribute("y"));
     		int radiuss = Integer.parseInt(node.getAttribute("radius"));
+    		id = getId(node);
     		String filename = node.getAttribute("saveMap");
-    		//output = meeshMap.rangeCities(xx,yy, radiuss, filename, doc);
-    		output = pmQuadTree.rangeCities(xx, yy, radiuss, filename, doc);
+    		//output = meeshMap.rangeCities(x,y, radiuss, filename, doc);
+    		output = pmQuadTree.rangeCities(x, y, radiuss, filename, doc, id);
     		root = output.printOutput();
     		break;
     	case "saveMap":
     		String fname = node.getAttribute("name");
+    		id = getId(node);
     		//meeshMap.saveMap(fname);
     		pmQuadTree.saveMap(fname);
-    		Success ss = new Success(doc, "saveMap");
+    		Success ss = new Success(doc, "saveMap", id);
     		ss.addParams("name", fname);
     		root = ss.printOutput();
     		break;
     	case "printTreap":
-    		output = pmQuadTree.printTreap(doc);
+    		id = getId(node);
+    		output = pmQuadTree.printTreap(doc, id);
     		root = output.printOutput();
     		break;
     	case "mapRoad":
-    		
+    		id = getId(node);
+    		String start = node.getAttribute("start");
+    		String end = node.getAttribute("end");
+    		output = pmQuadTree.mapRoad(start, end, doc, id);
+    		root = output.printOutput();
     		break;
     	case "rangeRoads":
-    		
+    		id = getId(node);
+    		x = Integer.parseInt(node.getAttribute("x"));
+    		y = Integer.parseInt(node.getAttribute("y"));
+    		radius = Integer.parseInt(node.getAttribute("radius"));
+    		String fileName = node.getAttribute("fileName");
+    		output = pmQuadTree.rangeRoads(x, y, radius, fileName, doc, id);
+    		root = output.printOutput();
     		break;
     	case "nearestIsolatedCity":
-    		
+    		id = getId(node);
+    		x = Integer.parseInt(node.getAttribute("x"));
+    		y = Integer.parseInt(node.getAttribute("y"));
+    		output = pmQuadTree.nearestIsolatedCity(x, y, doc, id);
+    		root = output.printOutput();
     		break;
     	case "nearestRoad":
-    		
+    		id = getId(node);
+    		x = Integer.parseInt(node.getAttribute("x"));
+    		y = Integer.parseInt(node.getAttribute("y"));
+    		output = pmQuadTree.nearestRoad(x, y, doc, id);
+    		root = output.printOutput();
     		break;
     	case "nearestCityToRoad":
-    		
+    		id = getId(node);
+    		String startP = node.getAttribute("start");
+    		String endP = node.getAttribute("end");
+    		output = pmQuadTree.nearestCityToRoad(startP, endP, doc, id);
+    		root = output.printOutput();
     		break;
     	case "shortestPath":
-    		
+    		id = getId(node);
+    		String st = node.getAttribute("start");
+    		String en = node.getAttribute("end");
+    		String saveM = node.getAttribute("saveMap");
+    		String saveHTML = node.getAttribute("saveHTML");
+    		output = pmQuadTree.shortestPath(st, en, saveM, saveHTML, id);
+    		root = output.printOutput();
     		break;
     	}
     	
     	return root;
+    }
+    
+    public static Integer getId(Element node) {
+    	String idString = node.getAttribute("id");
+    	Integer id;
+		if (idString == null || idString.equals("")) {
+			id = null;
+		} else {
+			id = Integer.parseInt(node.getAttribute("id"));
+		}
+		return id;
     }
 }

@@ -10,6 +10,12 @@ import java.util.Random;
 import java.util.Set;
 import java.util.SortedMap;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import cmsc420.meeshquest.part2.*;
+import cmsc420.meeshquest.part2.Error;
+
 public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 
 	private Comparator<? super K> comp;
@@ -564,19 +570,37 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 	/*
 	 * Prints the treap in an in-order traversal.
 	 */
-	public void printTreap() {
-		inOrder(this.root);
-		System.out.println("Root: " + this.root.getKey());
-		System.out.println("-----------------------");
+	public XmlOutput printTreap(Document doc, Integer id) {
+		Element treap = doc.createElement("treap");
+		if (this.size == 0) {
+			Error e = new Error(doc, "emptyTree", "printTreap");
+			return e;
+		}
+		treap.setAttribute("cardinality", "" + this.size);
+		Element t = printNode(this.root, doc);
+		treap.appendChild(t);
+		
+		Success s = new Success(doc, "printTreap", id);
+		s.addOutputElement(treap);
+		return s;
 	}
 	
-	public void inOrder(Node node) {
+	public Element printNode(Node node, Document doc) {
 		if (node != null) {
-			inOrder(node.left);
-			System.out.println("Key: " + node.getKey() + ", Value: " + node.getValue() + ", Priority: " + node.getPriority());
-			inOrder(node.right);
+			Element n = doc.createElement("node");
+			n.setAttribute("key", "" + node.getKey());
+			n.setAttribute("priority", "" + node.getPriority());
+			n.setAttribute("value", "" + node.getValue());
+			
+			Element l = printNode(node.left, doc);
+			//System.out.println("Key: " + node.getKey() + ", Value: " + node.getValue() + ", Priority: " + node.getPriority());
+			Element r = printNode(node.right, doc);
+			n.appendChild(l);
+			n.appendChild(r);
+			return n;
 		} else {
-			System.out.println("Null");
+			Element e = doc.createElement("emptyChild");
+			return e;
 		}
 	}
 	

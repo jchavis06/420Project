@@ -54,7 +54,7 @@ public abstract class PMQuadTree {
 	 * Needs to check validity on coordinates, check duplicates,
 	 * and then map to both the dictionary and the treap.
 	 */
-	public XmlOutput createCity(String name, int x, int y, int radius, String color, Document doc) {
+	public XmlOutput createCity(String name, int x, int y, int radius, String color, Document doc, Integer id) {
 		if (cityNames == null) {
 			cityNames = new TreeMap<String, City>(new CityNameComparator());
 		}
@@ -91,7 +91,7 @@ public abstract class PMQuadTree {
 				addCityByCoordinates(c.getCoordinates(), c);
 				addCityToTreap(name, c);
 				
-    			Success s = new Success(doc, "createCity");
+    			Success s = new Success(doc, "createCity", id);
     			s.addParams("name", name);
     			s.addParams("x", "" + x);
     			s.addParams("y", "" + y);
@@ -103,7 +103,7 @@ public abstract class PMQuadTree {
 	}
 	
 	
-	private XmlOutput mapCity(String cityName, boolean isIsolated, Document doc) {
+	private XmlOutput mapCity(String cityName, boolean isIsolated, Document doc, Integer id) {
 		//need to make sure that the city exists in our dictionary.
 		if (cityNames.containsKey(cityName)) {
 			City c = cityNames.get(cityName);
@@ -131,7 +131,7 @@ public abstract class PMQuadTree {
 			Node map = spatialMap.add(c, c.getX(), c.getY(), 1, 1);
 			spatialMap = map;
 			this.citiesMapped.add(cityName);
-			Success s = new Success(doc, "mapCity");
+			Success s = new Success(doc, "mapCity", id);
 			s.addParams("name", cityName);
 			return s;
 		} else {
@@ -142,7 +142,7 @@ public abstract class PMQuadTree {
 		}
 	}
 
-	public XmlOutput listCities(String sortBy, Document doc) {
+	public XmlOutput listCities(String sortBy, Document doc, Integer id) {
 		ArrayList<City> cities = new ArrayList<City>();
 		switch(sortBy) {
 		
@@ -169,7 +169,7 @@ public abstract class PMQuadTree {
 
 			CityList cityList = new CityList(cities);
 			Element cityListElement = cityList.getXmlElement(doc);
-			Success s = new Success(doc, "listCities");
+			Success s = new Success(doc, "listCities", id);
 			s.addParams("sortBy", sortBy);
 			s.addOutputElement(cityListElement);
 			return s;
@@ -188,12 +188,12 @@ public abstract class PMQuadTree {
 		treap.put(name, c);
 	}
 	
-	public XmlOutput mapIsolatedCity(String name, Document doc) {
-		return mapCity(name, true, doc);
+	public XmlOutput mapIsolatedCity(String name, Document doc, Integer id) {
+		return mapCity(name, true, doc, id);
 	}
 	
-	public XmlOutput mapNonIsolatedCity(String name, Document doc) {
-		return mapCity(name, false, doc);
+	public XmlOutput mapNonIsolatedCity(String name, Document doc, Integer id) {
+		return mapCity(name, false, doc, id);
 	}
 	
 	public void clearAll() {
@@ -205,7 +205,7 @@ public abstract class PMQuadTree {
 		this.spatialMap = whiteNode;
 	}
 	
-	public XmlOutput mapRoad(String start, String end, Document doc) {
+	public XmlOutput mapRoad(String start, String end, Document doc, Integer id) {
 		City s = cityNames.get(start);
 		City e = cityNames.get(end);
 		if (s == null) {
@@ -253,7 +253,7 @@ public abstract class PMQuadTree {
 		roads.add(road);
 		neighbors.mapNeighbors(start, end); //adds neighbor mapping to our adjacency list, both start ==> end and end==>start
 		
-		Success suc = new Success(doc, "mapRoad");
+		Success suc = new Success(doc, "mapRoad", id);
 		suc.addParams("start", start);
 		suc.addParams("end", end);
 		Element roadCreated = doc.createElement("roadCreated");
@@ -274,16 +274,16 @@ public abstract class PMQuadTree {
 		return (!Inclusive2DIntersectionVerifier.intersects(line, rectangle));
 	}
 	
-	public XmlOutput unmapCity(String cityName, Document doc) {
+	public XmlOutput unmapCity(String cityName, Document doc, Integer id) {
 		return null;
 	}
 	
-	public XmlOutput printPMQuadtree(Document doc) {
+	public XmlOutput printPMQuadtree(Document doc, Integer id) {
 		if (spatialMap instanceof WhiteNode) {
 			Error e = new Error(doc, "mapIsEmpty", "printPMQuadtree");
 			return e;
 		} else {
-			Success s = new Success(doc, "printPMQuadtree");
+			Success s = new Success(doc, "printPMQuadtree", id);
 			Element pmQuadTree = doc.createElement("quadtree");
 			Element tree = spatialMap.printNode(doc);
 			pmQuadTree.appendChild(tree);
@@ -292,27 +292,27 @@ public abstract class PMQuadTree {
 		}
 	}
 	
-	public XmlOutput printTreap(Document doc) {
+	public XmlOutput printTreap(Document doc, Integer id) {
 		return null;
 	}
 	
-	public XmlOutput deleteCity(String cityName, Document doc) {
+	public XmlOutput deleteCity(String cityName, Document doc, Integer id) {
 		return null;
 	}
 	
-	public XmlOutput rangeCities(int x, int y, int radius, String fileName, Document doc) {
+	public XmlOutput rangeCities(int x, int y, int radius, String fileName, Document doc, Integer id) {
 		return null;
 	}
 	
-	public XmlOutput rangeRoads(int x, int y, int radius, String fileName, Document doc) {
+	public XmlOutput rangeRoads(int x, int y, int radius, String fileName, Document doc, Integer id) {
 		return null;
 	}
 	
-	public XmlOutput nearestCity(int x, int y, Document doc) {
+	public XmlOutput nearestCity(int x, int y, Document doc, Integer id) {
 		return null;
 	}
 	
-	public XmlOutput nearestIsolatedCity(int x, int y, Document doc) {
+	public XmlOutput nearestIsolatedCity(int x, int y, Document doc, Integer id) {
 		/*
 		 * This will be efficient not because the search method is efficient but because we are 
 		 * only looking at those cities that are already isolated. It is most likely the case that most 
@@ -348,7 +348,7 @@ public abstract class PMQuadTree {
 			nearestIso.setAttribute("y","" + nearest.getY());
 			nearestIso.setAttribute("color", nearest.getColor());
 			nearestIso.setAttribute("radius", ""+ nearest.getRadius());
-			Success s = new Success(doc, "nearestIsolatedCity");
+			Success s = new Success(doc, "nearestIsolatedCity", id);
 			s.addParams("x", "" + x);
 			s.addParams("y", "" + y);
 			s.addOutputElement(nearestIso);
@@ -356,15 +356,15 @@ public abstract class PMQuadTree {
 		}
 	}
 	
-	public XmlOutput nearestRoad(int x, int y, Document doc) {
+	public XmlOutput nearestRoad(int x, int y, Document doc, Integer id) {
 		return null;
 	}
 	
-	public XmlOutput nearestCityToRoad(String start, String end, Document doc) {
+	public XmlOutput nearestCityToRoad(String start, String end, Document doc, Integer id) {
 		return null;
 	}
 	
-	public XmlOutput shortestPath(String start, String end, String saveMap, String saveHTML) {
+	public XmlOutput shortestPath(String start, String end, String saveMap, String saveHTML, Integer id) {
 		return null;
 	}
 	

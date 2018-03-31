@@ -14,12 +14,22 @@ public class Success implements XmlOutput{
 	private String command;
 	private LinkedHashMap<String, String> params;
 	private ArrayList<Element> output;
+	private Integer id;
+	
+	public Success(Document doc, String command, Integer id) {
+		this.doc = doc;
+		this.command = command;
+		params = new LinkedHashMap<String, String>();
+		output = new ArrayList<Element>();
+		this.id = id;
+	}
 	
 	public Success(Document doc, String command) {
 		this.doc = doc;
 		this.command = command;
 		params = new LinkedHashMap<String, String>();
 		output = new ArrayList<Element>();
+		this.id = null;
 	}
 	
 	public void addParams(String param, String value) {
@@ -36,6 +46,9 @@ public class Success implements XmlOutput{
 		Element com = doc.createElement("command");
 		//doc.appendChild(elt);
 		elt.appendChild(com);
+		if (id != null) {
+			com.setAttribute("id", "" + id);
+		}
 		com.setAttribute("name", command);
 		Element parameters = doc.createElement("parameters");
 		elt.appendChild(parameters);
