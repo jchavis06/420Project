@@ -9,13 +9,15 @@ public class City {
 	private Point2D.Float coordinates;
 	private int radius;
 	private String color;
+	private boolean isIsolated;
 	
 	
-	public City(String name, int x, int y, int radius, String color) {
+	public City(String name, int x, int y, int radius, String color, boolean isolated) {
 		this.name = name;
 		this.coordinates = new Point2D.Float((float) x, (float) y);
 		this.radius = radius;
 		this.color = color;
+		this.isIsolated = isolated;
 	}
 	
 	public String getName() {
@@ -40,6 +42,14 @@ public class City {
 	
 	public String getColor() {
 		return this.color;
+	}
+	
+	public boolean isIsolated() {
+		return this.isIsolated;
+	}
+	
+	public void makeIsolated() {
+		this.isIsolated = true;
 	}
 	
 }

@@ -25,13 +25,13 @@ public class GrayNode extends Node {
 		this.nodes[3] = new WhiteNode(x + mid, y, height / 2, width / 2);
 	}
 	
-	public Node add(City c) {
+	public Node add(City c, int x, int y, int height, int width) {
 		//need to get the quadrant the city is to be added to.
 		int cityX = c.getX();
 		int cityY = c.getY();
 		
-		int midX = x + (width / 2);
-		int midY = y + (height / 2);
+		int midX = this.x + (this.width / 2);
+		int midY = this.y + (this.height / 2);
 		int desiredQuadrant = getDesiredQuadrant(cityX, cityY, midX, midY);
 		
 		
@@ -39,11 +39,11 @@ public class GrayNode extends Node {
 //		int desiredY = getY(x, y, height, width, desiredQuadrant);
 		//need to add city to the node in that quadrant.
 				
-		Node x = this.nodes[desiredQuadrant - 1].add(c);
-		if (x == null) {
+		Node n = this.nodes[desiredQuadrant - 1].add(c, x, y, height, width);
+		if (n == null) {
 			return null;
 		}
-		this.nodes[desiredQuadrant - 1] = x; 
+		this.nodes[desiredQuadrant - 1] = n; 
 		return this;
 	}
 	

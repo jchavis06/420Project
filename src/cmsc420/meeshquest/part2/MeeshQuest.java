@@ -16,7 +16,8 @@ import cmsc420.xml.XmlUtility;
 
 public class MeeshQuest {
 
-	public static MeeshMap meeshMap;
+	//public static MeeshMap meeshMap;
+	public static PMQuadTree pmQuadTree;
     public static void main(String[] args) {
     	
     	Document results = null;
@@ -30,7 +31,13 @@ public class MeeshQuest {
         	Element commandNode = doc.getDocumentElement();
         	int spatialHeight = Integer.parseInt(commandNode.getAttribute("spatialHeight"));
         	int spatialWidth = Integer.parseInt(commandNode.getAttribute("spatialWidth"));
-        	meeshMap = new MeeshMap(spatialHeight, spatialWidth);
+        	int pmOrder = Integer.parseInt(commandNode.getAttribute("pmOrder"));
+        	//meeshMap = new MeeshMap(spatialHeight, spatialWidth);
+        	if (pmOrder == 1) {
+        		pmQuadTree = new PM1QuadTree(spatialHeight, spatialWidth);
+        	} else {
+        		pmQuadTree = new PM3QuadTree(spatialHeight, spatialWidth);
+        	}
         	
         	final NodeList nl = commandNode.getChildNodes();
         
@@ -87,59 +94,53 @@ public class MeeshQuest {
     		int y = Integer.parseInt(node.getAttribute("y"));
     		int radius = Integer.parseInt(node.getAttribute("radius"));
     		String color = node.getAttribute("color");
-    		output = meeshMap.createCity(cityName, x, y, radius, color, doc);
+    		//output = meeshMap.createCity(cityName, x, y, radius, color, doc);
+    		output = pmQuadTree.createCity(cityName, x, y, radius, color, doc);
     		root = output.printOutput();
     		break;
     		
     	case "listCities":
     		String sortBy = node.getAttribute("sortBy");
-    		ArrayList<City> cities = meeshMap.listCities(sortBy);
-    		if (cities.isEmpty()) {
-    			//error: noCitiesToList
-    			Error err = new Error(doc, "noCitiesToList", "listCities");
-    			err.addParam("sortBy", sortBy);
-    			root = err.printOutput();
-    		} else {
-
-    			CityList cityList = new CityList(cities);
-    			Element cityListElement = cityList.getXmlElement(doc);
-    			Success s = new Success(doc, "listCities");
-    			s.addParams("sortBy", sortBy);
-    			s.addOutputElement(cityListElement);
-    			root = s.printOutput();
-    		}
-    		
+    		//ArrayList<City> cities = meeshMap.listCities(sortBy);
+    		output = pmQuadTree.listCities(sortBy, doc);
+    		root = output.printOutput();
     		break;
     		
     	case "clearAll":
     		//System.out.println("Cleared all cities.");
-    		meeshMap.clearAll();
+    		//meeshMap.clearAll();
+    		pmQuadTree.clearAll();
     		Success s = new Success(doc, "clearAll");
     		root = s.printOutput();
     		break;
     	case "mapCity":
     		String city = node.getAttribute("name");
-    		output = meeshMap.mapCity(city, doc);
+    		//output = meeshMap.mapCity(city, doc);
+    		output = pmQuadTree.mapIsolatedCity(city, doc);
     		root = output.printOutput();
     		break;
     	case "unmapCity":
     		city = node.getAttribute("name");
-    		output = meeshMap.unmapCity(city, doc);
+    		//output = meeshMap.unmapCity(city, doc);
+    		output = pmQuadTree.unmapCity(city, doc);
     		root = output.printOutput();
     		break;
     	case "printPRQuadtree":
-    		output = meeshMap.printPRQuadTree(doc);
+    		//output = meeshMap.printPRQuadTree(doc);
+    		output = pmQuadTree.printPMQuadtree(doc);
     		root = output.printOutput();
     		break;
     	case "deleteCity":
     		String c = node.getAttribute("name");
-    		output = meeshMap.deleteCity(c, doc);
+    		//output = meeshMap.deleteCity(c, doc);
+    		output = pmQuadTree.deleteCity(c, doc);
     		root = output.printOutput();
     		break;
     	case "nearestCity":
     		int ex = Integer.parseInt(node.getAttribute("x"));
     		int why = Integer.parseInt(node.getAttribute("y"));
-    		output = meeshMap.nearestCity(ex, why, doc);
+    		//output = meeshMap.nearestCity(ex, why, doc);
+    		output = pmQuadTree.nearestCity(ex, why, doc);
     		root = output.printOutput();
     		break;
     	case "rangeCities":
@@ -147,15 +148,40 @@ public class MeeshQuest {
     		int yy = Integer.parseInt(node.getAttribute("y"));
     		int radiuss = Integer.parseInt(node.getAttribute("radius"));
     		String filename = node.getAttribute("saveMap");
-    		output = meeshMap.rangeCities(xx,yy, radiuss, filename, doc);
+    		//output = meeshMap.rangeCities(xx,yy, radiuss, filename, doc);
+    		output = pmQuadTree.rangeCities(xx, yy, radiuss, filename, doc);
     		root = output.printOutput();
     		break;
     	case "saveMap":
     		String fname = node.getAttribute("name");
-    		meeshMap.saveMap(fname);
+    		//meeshMap.saveMap(fname);
+    		pmQuadTree.saveMap(fname);
     		Success ss = new Success(doc, "saveMap");
     		ss.addParams("name", fname);
     		root = ss.printOutput();
+    		break;
+    	case "printTreap":
+    		output = pmQuadTree.printTreap(doc);
+    		root = output.printOutput();
+    		break;
+    	case "mapRoad":
+    		
+    		break;
+    	case "rangeRoads":
+    		
+    		break;
+    	case "nearestIsolatedCity":
+    		
+    		break;
+    	case "nearestRoad":
+    		
+    		break;
+    	case "nearestCityToRoad":
+    		
+    		break;
+    	case "shortestPath":
+    		
+    		break;
     	}
     	
     	return root;

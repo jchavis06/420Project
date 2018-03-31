@@ -20,14 +20,14 @@ public class BlackNode extends Node {
 		this.width = width;
 	}
 	
-	public Node add(City c) {
+	public Node add(City c, int x, int y, int height, int width) {
 		if (c.equals(city)) {
 			//this means we tried adding a city that is already in the map.
 			return null;
 		}
-		GrayNode g = new GrayNode(x, y, height, width);
-		g = (GrayNode) g.add(city);
-		g = (GrayNode) g.add(c);
+		GrayNode g = new GrayNode(this.x, this.y, this.height, this.width);
+		g = (GrayNode) g.add(city, this.x, this.y, this.height, this.width);
+		g = (GrayNode) g.add(c, x, y, height, width);
 		return g;
 	}
 	

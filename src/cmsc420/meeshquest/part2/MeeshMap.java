@@ -60,7 +60,7 @@ public class MeeshMap {
 			} else {
 				//no duplicate city name or coordinate.
 				//add the city.
-				City c = new City(name, x, y, radius, color);
+				City c = new City(name, x, y, radius, color, false); //we say false for isIsolated because Point Quadtrees have no isolated cities (they all are, since no roads exist).
 				addCityByName(name, c);
 				addCityByCoordinates(c.getCoordinates(), c);
 				
@@ -105,7 +105,7 @@ public class MeeshMap {
 				e.addParam("name", cityName);
 				return e;
 			}
-			Node map = spatialMap.add(c);
+			Node map = spatialMap.add(c, c.getX(), c.getY(), 1, 1);
 			spatialMap = map;
 			this.citiesMapped.add(cityName);
 			Success s = new Success(doc, "mapCity");
@@ -459,6 +459,7 @@ public class MeeshMap {
 		//reset everything, effectively losing all cities created.
 		this.cityNames = new TreeMap<String, City>(new CityNameComparator());
 		this.cityCoordinates = new TreeMap<Point2D.Float, City>(new CityCoordinateComparator());
+		this.citiesMapped = new ArrayList<String>();
 		this.spatialMap = new WhiteNode(0, 0, spatialHeight, spatialWidth);
 	}
 	

@@ -7,9 +7,9 @@ import org.w3c.dom.Element;
 
 import cmsc420.drawing.CanvasPlus;
 
-public abstract class Node {
+public abstract class Node{
 
-	public Node add(City c) {
+	public Node add(City c, int x, int y, int height, int width) {
 		return null;
 	}
 	
