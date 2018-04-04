@@ -5,6 +5,7 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -301,15 +302,278 @@ public abstract class PMQuadTree {
 	}
 	
 	public XmlOutput rangeCities(int x, int y, int radius, String fileName, Document doc, Integer id) {
-		return null;
+PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
+		
+		Node root = this.spatialMap;
+		if (root instanceof WhiteNode) {
+			Error e = new Error(doc, "noCitiesExistInRange", "rangeCities");
+			e.addParam("x", "" + x);
+			e.addParam("y", "" + y);
+			e.addParam("radius", "" + radius);
+			if (! fileName.equals("")) {
+				e.addParam("saveMap", fileName);
+			}
+			return e;
+		}
+		
+		Rectangle2D.Float rect = root.getRect();
+		QuadDist quadDist = new QuadDist(rect, x, y, root);
+		pq.add(quadDist);
+		ArrayList<QuadDist> possibleSolutions = new ArrayList<QuadDist>();
+		
+		while (! pq.isEmpty()) {
+			QuadDist qd = pq.poll();
+			Node n = qd.getNode();
+			if (n instanceof WhiteNode) {
+				//theres no cities within the range.
+				Error e = new Error(doc, "noCitiesExistInRange", "rangeCities");
+				e.addParam("x", ""+x);
+				e.addParam("y", ""+y);
+				e.addParam("radius", ""+radius);
+				if (! fileName.equals("")) {
+					e.addParam("saveMap", fileName);
+				}
+				return e;
+			} else if (n instanceof GrayNode) {
+				for (Node child: ((GrayNode) n).getChildren()) {
+					if (child instanceof WhiteNode) {
+						//we dont want to add a white node into the priority queue.
+					} else {
+						Rectangle2D.Float r = child.getRect();
+						QuadDist qd1 = new QuadDist(r, x, y, child);
+						pq.add(qd1);
+					}
+				}
+			} else if (n instanceof BlackNode) {
+				//check to make sure city is within radius. If it is, add to possible solution
+				//if not within radius, we break the loop and check the next in queue for final check.
+				double dist = qd.getBlackNodeDistance();
+				if (dist > radius) {
+					//break the loop.
+					break;
+				} else {
+					possibleSolutions.add(qd);
+				}
+			} else {
+				//cry
+			}
+		}
+		
+		
+		QuadDist otherSolution = pq.poll();
+		if (otherSolution != null) {
+			PriorityQueue<QuadDist> pq1 = new PriorityQueue<QuadDist>(new QuadDistComp());
+			pq1.add(otherSolution);
+			
+			while (! pq1.isEmpty()) {
+				QuadDist qd = pq1.poll();
+				Node n = qd.getNode();
+				if (n instanceof WhiteNode) {
+					//break from this
+					break;
+				} else if (n instanceof GrayNode) {
+					for (Node child: ((GrayNode) n).getChildren()) {
+						Rectangle2D.Float r = child.getRect();
+						QuadDist qd1 = new QuadDist(r, x, y, child);
+						pq1.add(qd1);
+					}
+				} else if (n instanceof BlackNode) {
+					double distance = qd.getDist();
+					if (radius >= distance) {
+						//add to possible solutions
+						possibleSolutions.add(qd);
+					} else {
+						//we have looked at all of the possible solutions within radius.
+						break;
+					}
+					
+				} else {
+					//weep hard
+				}
+			}
+		}
+		
+		
+		//now we have all of the solutions that are within the radius.
+		//we have them in the form of ArrayList<QuadDist> and we need ArrayList<City>
+		ArrayList<City> cities = new ArrayList<City>();
+		for (QuadDist qd: possibleSolutions) {
+			cities.add(((BlackNode)qd.getNode()).getCity());
+		}
+		
+		//sort by city name.
+		cities.sort(new CityComparator());
+		
+		
+		if (cities.isEmpty()) {
+			Error e = new Error(doc, "noCitiesExistInRange", "rangeCities");
+			e.addParam("x", ""+x);
+			e.addParam("y", ""+y);
+			e.addParam("radius", ""+radius);
+			if (! fileName.equals("")) {
+				e.addParam("saveMap", fileName);
+			}
+			return e;
+		} else {
+			if (! fileName.equals("")) {
+				saveMap(fileName, x, y, radius);
+			}
+			CityList cityList = new CityList(cities);
+			Element cityListElement = cityList.getXmlElement(doc);
+			Success s = new Success(doc, "rangeCities", id);
+			s.addParams("x",""+x);
+			s.addParams("y",""+y);
+			s.addParams("radius", ""+radius);
+			if (! fileName.equals("")) {
+				s.addParams("saveMap", fileName);
+			}
+			s.addOutputElement(cityListElement);
+			return s;
+		}
 	}
 	
+	/*
+	 * Trying the basic approach first of just looping through all of the roads and selecting 
+	 * all of them. This will be O(N) where N is the number of roads.
+	 */
 	public XmlOutput rangeRoads(int x, int y, int radius, String fileName, Document doc, Integer id) {
-		return null;
+		ArrayList<Road> roadsInside = new ArrayList<Road>();
+		Circle2D.Float circle = new Circle2D.Float((float) x, (float) y, (float) radius);
+		if (this.roads.size() == 0) {
+			Error e = new Error(doc, "noRoadsExistInRange", "rangeRoads");
+			e.addParam("x", ""+x);
+			e.addParam("y", ""+y);
+			e.addParam("radius", ""+radius);
+			return e;
+		}
+		for (Road r: this.roads) {
+			if (r.intersectsOrInsideCircle(circle)) {
+				roadsInside.add(r);
+			}
+		}
+		
+		
+		roadsInside.sort(new RoadComparator());
+		RoadList roadList = new RoadList(roadsInside);
+		Success s = new Success(doc, "rangeRoads", id);
+		s.addParams("x", "" + x);
+		s.addParams("y", ""+y);
+		s.addParams("radius", ""+radius);
+		s.addOutputElement(roadList.getXmlElement(doc));
+		return s;
+		
 	}
 	
 	public XmlOutput nearestCity(int x, int y, Document doc, Integer id) {
-		return null;
+		PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
+		//add root of the spatial map.
+		Node root = this.spatialMap;
+		if (root instanceof WhiteNode) {
+			//white root means no cities have been added.
+			Error e = new Error(doc, "mapIsEmpty", "nearestCity");
+			e.addParam("x", ""+x);
+			e.addParam("y", ""+y);
+			return e;
+		}
+		
+		Rectangle2D.Float rect = root.getRect();
+		QuadDist quadDist = new QuadDist(rect, x, y, root);
+		pq.add(quadDist);
+		QuadDist possibleSolution = null;
+		City solution = null;
+		while(! pq.isEmpty()) {
+			
+			QuadDist qd = pq.poll();
+			Node n = qd.getNode();
+			if (n instanceof WhiteNode) {
+				//do nothing
+				//break;
+			} else if (n instanceof GrayNode) {
+				for (Node child: ((GrayNode) n).getChildren()) {
+					Rectangle2D.Float r = child.getRect();
+					QuadDist qd1 = new QuadDist(r, x, y, child);
+					pq.add(qd1);
+				}
+			} else if (n instanceof BlackNode) {
+				if (!((BlackNode) n).getCity().isIsolated()) {
+					possibleSolution = qd;
+					//stop adding to the queue.
+					break;
+				}
+			} else {
+				//something went wrong.
+			}
+		}
+		
+		if (possibleSolution != null) {
+			//need to only check the top of the PriorityQueue to make sure we have right answer.
+			QuadDist otherSolution = pq.poll();
+			if (otherSolution == null) {
+				solution = ((BlackNode) (possibleSolution.getNode())).getCity();
+			} else {
+				PriorityQueue<QuadDist> pq1 = new PriorityQueue<QuadDist>(new QuadDistComp());
+				pq1.add(otherSolution);
+				
+				while (! pq1.isEmpty()) {
+					QuadDist qd = pq1.poll();
+					Node n = qd.getNode();
+					if (n instanceof WhiteNode) {
+						
+						solution = ((BlackNode) (possibleSolution.getNode())).getCity();
+						break;
+					} else if (n instanceof BlackNode) {
+						
+						double dist = qd.getBlackNodeDistance();
+						double psDist = possibleSolution.getBlackNodeDistance();
+						if (psDist == dist) {
+							//dead tie on closest city.
+							solution = ((BlackNode) (possibleSolution.getNode())).getCity();
+						} else {
+							if (psDist > dist) {
+								solution = ((BlackNode) (qd.getNode())).getCity();
+							} else {
+								solution = ((BlackNode) (possibleSolution.getNode())).getCity();
+							}
+						}
+						break;
+						
+					} else if (n instanceof GrayNode) {
+						
+						for (Node child: ((GrayNode) n).getChildren()) {
+							Rectangle2D.Float r = child.getRect();
+							QuadDist qd1 = new QuadDist(r, x, y, child);
+							pq1.add(qd1);
+						}
+						
+					}
+				}
+			}
+			
+			if (solution != null) {
+				//now that we have the solution as a city object, just need to return XmlOutput object
+				Success s = new Success(doc, "nearestCity");
+				s.addParams("x", "" + x);
+				s.addParams("y", "" + y);
+				Element city = doc.createElement("city");
+				city.setAttribute("name", solution.getName());
+				city.setAttribute("x", "" + solution.getX());
+				city.setAttribute("y", "" + solution.getY());
+				city.setAttribute("color", solution.getColor());
+				city.setAttribute("radius", "" + solution.getRadius());
+				
+				s.addOutputElement(city);
+				return s;
+			} else {
+				Error e = new Error(doc, "mapIsEmpty", "nearestCity");
+				e.addParam("x", ""+x);
+				e.addParam("y", ""+y);
+				return e;
+			}
+		} else {
+			//something must have really gone wrong.
+			FatalError fe = new FatalError(doc);
+			return fe;
+		}
 	}
 	
 	public XmlOutput nearestIsolatedCity(int x, int y, Document doc, Integer id) {
@@ -356,8 +620,37 @@ public abstract class PMQuadTree {
 		}
 	}
 	
+	/*
+	 * Doing this the same as range roads. Will be exactly O(N) so if you need it to be faster
+	 * then you need another algorithm.
+	 */
 	public XmlOutput nearestRoad(int x, int y, Document doc, Integer id) {
-		return null;
+		
+		float minDist = -1;
+		Road nearestRoad = null;
+		if (this.roads.size() == 0) {
+			Error e = new Error(doc, "roadNotFound", "nearestRoad");
+			e.addParam("x", ""+x);
+			e.addParam("y", ""+y);
+			return e;
+		}
+		
+		for (Road r: this.roads) {
+			float tempDist = r.getDistanceToPoint(new Point2D.Float((float)x,(float)y));
+			if (minDist == -1) {
+				minDist = tempDist;
+				nearestRoad = r;
+			} else if (tempDist < minDist) {
+				minDist = tempDist;
+				nearestRoad = r;
+			}
+		}
+		
+		Success s = new Success(doc, "nearestRoad", id);
+		s.addParams("x", ""+x);
+		s.addParams("y", ""+y);
+		s.addOutputElement(nearestRoad.printRoad(doc));
+		return s;
 	}
 	
 	public XmlOutput nearestCityToRoad(String start, String end, Document doc, Integer id) {
@@ -384,6 +677,22 @@ public abstract class PMQuadTree {
 		}
 	}
 	
+	public void saveMap(String fileName, int x, int y, int radius) {
+		try {
+			CanvasPlus cp = new CanvasPlus();
+			cp.setFrameSize(spatialWidth, spatialHeight);
+			//cp.setFrameSize(100,100);
+			cp.addRectangle(0, 0, spatialWidth, spatialHeight, Color.WHITE, true);
+			//cp.addRectangle(0, 0, spatialWidth, spatialHeight, Color.BLACK, false);
+			//cp.addPoint("baltimore", 20, 20, Color.BLACK);
+			cp = spatialMap.drawMap(cp);
+			cp.addCircle(x, y, radius, Color.BLUE, false);
+			cp.save(fileName);
+		
+		} catch (Exception e) {
+			System.out.println("error: " + e.getMessage());
+		}
+	}
 	
 	
 	

@@ -1,5 +1,6 @@
 package cmsc420.meeshquest.part2;
 
+import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
@@ -11,6 +12,7 @@ public class QuadDist {
 	private double distance;
 	private Node n;
 	private int pointX, pointY;
+	private Line2D.Float lineSeg;
 	
 	public QuadDist(Rectangle2D.Float rect, int pointX, int pointY, Node n) {
 		this.rect = rect;
@@ -18,6 +20,13 @@ public class QuadDist {
 		this.pointY = pointY;
 		this.n = n;
 		this.distance = Shape2DDistanceCalculator.distance(new Point2D.Float((float) pointX, (float) pointY), rect);
+	}
+	
+	public QuadDist(Rectangle2D.Float rect, Line2D.Float lineSeg, Node n) {
+		this.rect = rect;
+		this.lineSeg = lineSeg;
+		this.n = n; 
+		this.distance = Shape2DDistanceCalculator.distance(lineSeg, rect);
 	}
 	
 	public double getDist() {
@@ -34,7 +43,26 @@ public class QuadDist {
 		City c = node.getCity();
 		int x = c.getX();
 		int y = c.getY();
-		double distance = Point2D.distance((float) pointX, (float) pointY, (float) x, (float) y);
+		
+		double distance;
+		if (this.lineSeg != null) {
+			//calc distance from point to a line.
+			float x1 = (float)lineSeg.getX1();
+			float y1 = (float)lineSeg.getY1();
+			float x2 = (float)lineSeg.getX2();
+			float y2 = (float)lineSeg.getY2();
+			
+			float pX = (float)c.getX();
+			float pY = (float)c.getY();
+			
+			float numerator = Math.abs(((y2 - y1)*(pX)) - ((x2 - x1)*(pY)) + (x2*y1) - (y2*x1));
+			float denominator = (float)Math.sqrt((Math.pow((y2 - y1),2) + Math.pow((x2-x1),2)));
+			
+			distance = numerator / denominator;
+		} else {
+			distance = Point2D.distance((float) pointX, (float) pointY, (float) x, (float) y);
+		}
+		
 		return distance;
 	}
 }
