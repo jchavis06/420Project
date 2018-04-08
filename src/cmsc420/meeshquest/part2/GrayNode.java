@@ -39,7 +39,7 @@ public class GrayNode extends Node {
 //		int desiredY = getY(x, y, height, width, desiredQuadrant);
 		//need to add city to the node in that quadrant.
 				
-		Node n = this.nodes[desiredQuadrant - 1].add(c, x, y, height, width);
+		Node n = this.nodes[desiredQuadrant - 1].addCity(c,0,0, x, y, height, width);
 		if (n == null) {
 			return null;
 		}

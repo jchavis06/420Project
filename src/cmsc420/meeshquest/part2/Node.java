@@ -9,7 +9,11 @@ import cmsc420.drawing.CanvasPlus;
 
 public abstract class Node{
 
-	public Node add(City c, int x, int y, int height, int width) {
+	public Node addCity(City c, int startX, int startY, int x, int y, int height, int width) {
+		return null;
+	}
+	
+	public Node addRoad(Road r) {
 		return null;
 	}
 	

@@ -1,0 +1,74 @@
+<commands pmOrder="3" spatialHeight="2048" spatialWidth="2048" xsi:noNamespaceSchemaLocation="part2in.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    
+    <createCity color="black" radius="0" y="0" x="0" name="A1"/>
+    <createCity color="black" radius="0" y="0" x="512" name="A2"/>
+    <createCity color="black" radius="0" y="0" x="1024" name="A3"/>
+    <createCity color="black" radius="0" y="512" x="0" name="A4"/>
+    <createCity color="black" radius="0" y="512" x="512" name="A5"/>
+    <createCity color="black" radius="0" y="512" x="1024" name="A6"/>
+    <createCity color="black" radius="0" y="616" x="281" name="A8"/>
+    <createCity color="black" radius="0" y="623" x="1253" name="A9"/>
+    <createCity color="black" radius="0" y="2166" x="1594" name="A10"/>
+    <createCity color="black" radius="0" y="1150" x="1457" name="A11"/>
+    <createCity color="black" radius="0" y="447" x="849" name="A12"/>
+    <createCity color="black" radius="0" y="2167" x="1619" name="A13"/>
+    <createCity color="black" radius="0" y="2469" x="430" name="A14"/>
+    <createCity color="black" radius="0" y="208" x="216" name="A15"/>
+    <createCity color="black" radius="0" y="1343" x="52" name="A16"/>
+    <createCity color="black" radius="0" y="856" x="2171" name="A17"/>
+    <createCity color="black" radius="0" y="1047" x="2222" name="A18"/>
+    <createCity color="black" radius="0" y="644" x="193" name="A19"/>
+    <createCity color="black" radius="0" y="1657" x="2465" name="A20"/>
+    <createCity color="black" radius="0" y="2055" x="669" name="A21"/>
+    <createCity color="black" radius="0" y="597" x="533" name="A22"/>
+    <createCity color="black" radius="0" y="299" x="450" name="A23"/>
+    <createCity color="black" radius="0" y="1822" x="238" name="A24"/>
+    <createCity color="black" radius="0" y="65" x="1621" name="A25"/>
+    <createCity color="black" radius="0" y="1332" x="124" name="A26"/>
+    <createCity color="black" radius="0" y="1935" x="410" name="A27"/>
+    <createCity color="black" radius="0" y="2425" x="632" name="A28"/>
+    <createCity color="black" radius="0" y="148" x="716" name="A29"/>
+    <createCity color="black" radius="0" y="660" x="884" name="A30"/>
+    <createCity color="black" radius="0" y="756" x="1773" name="A31"/>
+    <createCity color="black" radius="0" y="2071" x="899" name="A32"/>
+    <createCity color="black" radius="0" y="1390" x="237" name="A33"/>
+    <createCity color="black" radius="0" y="324" x="298" name="A34"/>
+    <mapCity name="A1"/>
+    <mapCity name="A2"/>
+    <mapCity name="A3"/>
+    <mapCity name="A4"/>
+    <mapCity name="A5"/>
+    <mapCity name="A6"/>
+    <mapCity name="A8"/>
+    <mapCity name="A9"/>
+    <mapCity name="A10"/>
+    <mapCity name="A11"/>
+    <mapCity name="A12"/>
+    <mapCity name="A13"/>
+    <mapCity name="A14"/>
+    <mapCity name="A15"/>
+    <mapCity name="A16"/>
+    <mapCity name="A17"/>
+    <mapCity name="A18"/>
+    <mapCity name="A19"/>
+    <mapCity name="A20"/>
+    <mapCity name="A21"/>
+    <mapCity name="A22"/>
+    <mapCity name="A23"/>
+    <mapCity name="A24"/>
+    <mapCity name="A25"/>
+    <mapCity name="A26"/>
+    <mapCity name="A27"/>
+    <mapCity name="A28"/>
+    <mapCity name="A29"/>
+    <mapCity name="A30"/>
+    <mapCity name="A31"/>
+    <mapCity name="A32"/>
+
+    <mapCity name="A35"/>
+
+	<mapRoad start="A34" end="A33"/>
+    <mapRoad start="A34" end="A33"/>
+    <!--<printPMQuadtree/> -->
+    <saveMap name="wut"/>
+</commands>

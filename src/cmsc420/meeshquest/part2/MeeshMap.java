@@ -105,7 +105,7 @@ public class MeeshMap {
 				e.addParam("name", cityName);
 				return e;
 			}
-			Node map = spatialMap.add(c, c.getX(), c.getY(), 1, 1);
+			Node map = spatialMap.addCity(c, 0,0, c.getX(), c.getY(), 1, 1);
 			spatialMap = map;
 			this.citiesMapped.add(cityName);
 			Success s = new Success(doc, "mapCity");

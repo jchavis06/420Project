@@ -21,8 +21,8 @@ public class MeeshQuest {
     public static void main(String[] args) {
     	
     	Document results = null;
-    	String testFile = "testFiles\\part1Tests\\testAll.xml";
-    	
+    	//String testFile = "testFiles\\part2Tests\\part2.public.listCities.input.xml";
+    	String testFile = "testFiles\\part2Tests\\test3.xml";
         try {
         	Document doc = XmlUtility.validateNoNamespace(System.in);
         	//Document doc = XmlUtility.validateNoNamespace(new File(testFile));
@@ -133,7 +133,7 @@ public class MeeshQuest {
     		output = pmQuadTree.unmapCity(cityName, doc, id);
     		root = output.printOutput();
     		break;
-    	case "printPRQuadtree":
+    	case "printPMQuadtree":
     		id = getId(node);
     		//output = meeshMap.printPRQuadTree(doc);
     		output = pmQuadTree.printPMQuadtree(doc, id);
@@ -190,7 +190,7 @@ public class MeeshQuest {
     		x = Integer.parseInt(node.getAttribute("x"));
     		y = Integer.parseInt(node.getAttribute("y"));
     		radius = Integer.parseInt(node.getAttribute("radius"));
-    		String fileName = node.getAttribute("fileName");
+    		String fileName = node.getAttribute("saveMap");
     		output = pmQuadTree.rangeRoads(x, y, radius, fileName, doc, id);
     		root = output.printOutput();
     		break;

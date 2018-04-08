@@ -40,7 +40,7 @@ public class AdjacencyList {
 		TreeSet<String> n1 = neighbors.get(cityA);
 		TreeSet<String> n2 = neighbors.get(cityB);
 		
-		return ((n1.contains(cityB) || (n2.contains(cityA))));
+		return ((n1 != null && n2 != null) && (n1.contains(cityB) || (n2.contains(cityA))));
 	}
 	
 	public TreeSet<String> getNeighbors(String city) {

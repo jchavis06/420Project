@@ -13,7 +13,7 @@ public class RoadList {
 		}
 		
 		public Element getXmlElement(Document doc) {
-			Element cityList = doc.createElement("cityList");
+			Element cityList = doc.createElement("roadList");
 			for(Road r: roads) {
 				Element road = r.printRoad(doc);
 				cityList.appendChild(road);

@@ -5,34 +5,53 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.TreeMap;
 
 import cmsc420.sortedmap.*;
+import cmsc420.sortedmap.Treap.EntrySet;
 import cmsc420.sortedmap.Treap.Node;
 public class testTreap {
 
 	public static void main(String args[]) {
-//		Treap<Integer,Integer> treap = new Treap<Integer,Integer>(new IntegerComp());
-//		treap.put(6, 10);
-//		treap.printTreap();
-//		treap.put(8, 20);
-//		treap.printTreap();
-//		treap.put(10, 30);
-//		treap.put(3, 3);
-//		treap.printTreap();
+
 		
-		Treap<String, String> m = new Treap<String, String>(new StringComp());
-		m.put("Auto","Fail");
-		Set<Map.Entry<String, String>> s = m.entrySet();
-		Iterator<Map.Entry<String,String>> i = s.iterator();
-		System.out.println("Values:");
-		while (i.hasNext()) {
-			Map.Entry<String, String> x = i.next();
-			System.out.println(x.getKey() + ", " + x.getValue());
-		}
-		m.put("F","---");
-		if (s.contains(m.testNode("Auto","Fail"))) {
-			System.out.println("You rock!");
-		}
+//		Treap<Integer, Integer> treap = new Treap<Integer, Integer>();
+//		TreeMap<Integer, Integer> treeMap = new TreeMap<Integer, Integer>();
+//		treap.put(1, 2);
+//		treap.put(3,4);
+//		treap.put(5,6);
+//		treap.put(7, 8);
+//		treap.put(9, 10);
+//		
+//		treeMap.put(1, 2);
+//		treeMap.put(3,4);
+//		treeMap.put(5,6);
+//		treeMap.put(7, 8);
+//		treeMap.put(9, 10);
+//		
+//		Set<Map.Entry<Integer,Integer>> treapSet = treap.entrySet();
+//		Set<Map.Entry<Integer,Integer>> treeMapSet = treeMap.entrySet();
+//		Iterator<Map.Entry<Integer,Integer>> treapIt = treapSet.iterator();
+//		Iterator<Map.Entry<Integer,Integer>> treeMapIt = treeMapSet.iterator();
+//		
+//		System.out.println(treapSet);
+//		System.out.println(treeMapSet);
+//		while (treapIt.hasNext() && treeMapIt.hasNext()) {
+//			Entry val1 = treapIt.next();
+//			Entry val2 = treeMapIt.next();
+//			System.out.println(val1.equals(val2));
+//			System.out.println(val1.hashCode() == val2.hashCode());
+//			System.out.println("-----");
+//		}
+		
+		SortedMap<Integer,Integer> map = new Treap<Integer, Integer>();
+		SortedMap<Integer,Integer> rb = new TreeMap<Integer, Integer>();
+		map.put(1,1);
+		rb.put(1,1);
+		System.out.println(map.equals(rb));
+		System.out.println(rb.equals(map));
+		System.out.println(map.toString().equals(rb.toString()));
+		System.out.println(map.hashCode() == rb.hashCode());
 	} 
 	
 	public static class IntegerComp implements Comparator<Integer> {

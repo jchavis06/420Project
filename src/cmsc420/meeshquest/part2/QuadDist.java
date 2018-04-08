@@ -39,8 +39,11 @@ public class QuadDist {
 	
 	//NOTE THIS SHOULD ONLY BE CALLED IF CONFIRMED TO BE A BLACK NODE.
 	public double getBlackNodeDistance() {
-		BlackNode node = ((BlackNode) n);
+		PMQuadTree.BlackNode node = ((PMQuadTree.BlackNode) n);
 		City c = node.getCity();
+		if (c == null) {
+			return -1;
+		}
 		int x = c.getX();
 		int y = c.getY();
 		

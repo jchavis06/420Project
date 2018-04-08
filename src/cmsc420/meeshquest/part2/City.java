@@ -52,4 +52,8 @@ public class City {
 		this.isIsolated = true;
 	}
 	
+	public String toString() {
+		return "(" + this.getX() + "," + this.getY() + ")";
+	}
+	
 }
