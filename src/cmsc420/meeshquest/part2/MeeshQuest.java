@@ -22,7 +22,7 @@ public class MeeshQuest {
     	
     	Document results = null;
     	//String testFile = "testFiles\\part2Tests\\part2.public.listCities.input.xml";
-    	String testFile = "testFiles\\part2Tests\\test3.xml";
+    	String testFile = "testFiles//part2Tests//test3.xml";
         try {
         	Document doc = XmlUtility.validateNoNamespace(System.in);
         	//Document doc = XmlUtility.validateNoNamespace(new File(testFile));
@@ -61,15 +61,20 @@ public class MeeshQuest {
         	/* TODO: Process fatal error here */
         	//System.out.println("Exception: " + e.getMessage());
         	try {
+        		//System.out.println("Errorrrrrrrr: " + e.getMessage());
         		results = XmlUtility.getDocumentBuilder().newDocument();
-            	FatalError fe = new FatalError(results);
+            	//FatalError fe = new FatalError(results);
+            	//System.out.println("Error: " + e.getMessage());
+            	//Element t = results.createElement("Error");
+            	//t.setAttribute("Error: ", e.getMessage());
             	//Element t = results.createElement("Error: "+ e.getMessage());
             	//Element res = results.createElement("results");
             	//res = (Element) results.appendChild(res);
             	//res.appendChild(fe.printOutput());
+        		Error fe = new Error(results, "Error", e.getMessage());
             	results.appendChild(fe.printOutput());
         	} catch (Exception f) {
-        		//System.out.println("")
+        		//System.out.println("Cant do that dummy: " + f.get);
         	}
         	
 		} finally {

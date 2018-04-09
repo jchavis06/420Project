@@ -203,6 +203,9 @@ public abstract class PMQuadTree {
 		this.cityNames = new TreeMap<String, City>(new CityNameComparator());
 		this.cityCoordinates = new TreeMap<Point2D.Float, City>(new CityCoordinateComparator());
 		this.citiesMapped = new ArrayList<String>();
+		this.isolatedCities = new ArrayList<City>();
+		this.neighbors = new AdjacencyList();
+		this.roads = new ArrayList<Road>();
 		this.treap = new Treap<String, City>(new CityNameComparator());
 		this.spatialMap = whiteNode;
 	}
@@ -452,19 +455,19 @@ PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
 	public XmlOutput rangeRoads(int x, int y, int radius, String fileName, Document doc, Integer id) {
 		ArrayList<Road> roadsInside = new ArrayList<Road>();
 		Circle2D.Float circle = new Circle2D.Float((float) x, (float) y, (float) radius);
-		if (this.roads.size() == 0) {
-			Error e = new Error(doc, "noRoadsExistInRange", "rangeRoads");
-			e.addParam("x", ""+x);
-			e.addParam("y", ""+y);
-			e.addParam("radius", ""+radius);
-			return e;
-		}
 		for (Road r: this.roads) {
 			if (r.intersectsOrInsideCircle(circle)) {
 				roadsInside.add(r);
 			}
 		}
 		
+		if (roadsInside.size() == 0) {
+			Error e = new Error(doc, "noRoadsExistInRange", "rangeRoads");
+			e.addParam("x", ""+x);
+			e.addParam("y", ""+y);
+			e.addParam("radius", ""+radius);
+			return e;
+		}
 		roadsInside.sort(new RoadComparator());
 		RoadList roadList = new RoadList(roadsInside);
 		Success s = new Success(doc, "rangeRoads", id);
@@ -581,7 +584,7 @@ PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
 			
 			if (solution != null) {
 				//now that we have the solution as a city object, just need to return XmlOutput object
-				Success s = new Success(doc, "nearestCity");
+				Success s = new Success(doc, "nearestCity", id);
 				s.addParams("x", "" + x);
 				s.addParams("y", "" + y);
 				Element city = doc.createElement("city");
@@ -725,7 +728,8 @@ PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
 			cp.save(fileName);
 		
 		} catch (Exception e) {
-			System.out.println("error: " + e.getMessage());
+			//System.out.println("error: " + e.getMessage());
+			
 		}
 	}
 	
@@ -747,7 +751,7 @@ PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
 			cp.save(fileName);
 		
 		} catch (Exception e) {
-			System.out.println("error: " + e.getMessage());
+			//System.out.println("error: " + e.getMessage());
 		}
 	}
 	
