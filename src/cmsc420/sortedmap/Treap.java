@@ -518,6 +518,9 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 			//NOTE: If fromKey == toKey, the sub map will be empty.
 		}
 
+		public void clear() {
+			Treap.this.clear();
+		}
 		/**
 		 * Ok so from the AbstractMap docs, containsKey() ITERATES through entrySet and tries to find val.
 		 * size() calls entrySet().size() so we need to edit entrySet.size()
