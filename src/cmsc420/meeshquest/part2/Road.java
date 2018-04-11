@@ -126,7 +126,8 @@ public class Road {
 //		float denominator = (float)Math.sqrt((Math.pow((y2 - y1),2) + Math.pow((x2-x1),2)));
 //		
 //		float distance = numerator / denominator;
-		float distance = (float) Shape2DDistanceCalculator.distance(this.line, new Rectangle2D.Float((float)point.getX(), (float)point.getY(), 0, 0));
+		float distance = (float) this.line.ptSegDist(point);
+		//float distance = (float) Shape2DDistanceCalculator.distance(this.line, new Rectangle2D.Float((float)point.getX(), (float)point.getY(), 0, 0));
 		return distance;
 	}
 	public float getLength() {

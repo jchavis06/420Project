@@ -21,7 +21,7 @@ public class MeeshQuest {
     public static void main(String[] args) {
     	
     	Document results = null;
-    	//String testFile = "testFiles\\part2Tests\\part2.public.listCities.input.xml";
+    	//String testFile = "testFiles\\part2Tests\\part2.public.range.input.xml";
     	String testFile = "testFiles//part2Tests//test3.xml";
         try {
         	Document doc = XmlUtility.validateNoNamespace(System.in);
@@ -63,7 +63,7 @@ public class MeeshQuest {
         	try {
         		//System.out.println("Errorrrrrrrr: " + e.getMessage());
         		results = XmlUtility.getDocumentBuilder().newDocument();
-            	//FatalError fe = new FatalError(results);
+            	FatalError fe = new FatalError(results);
             	//System.out.println("Error: " + e.getMessage());
             	//Element t = results.createElement("Error");
             	//t.setAttribute("Error: ", e.getMessage());
@@ -71,7 +71,7 @@ public class MeeshQuest {
             	//Element res = results.createElement("results");
             	//res = (Element) results.appendChild(res);
             	//res.appendChild(fe.printOutput());
-        		Error fe = new Error(results, "Error", e.getMessage());
+        		//Error fe = new Error(results, "Error", e.getMessage());
             	results.appendChild(fe.printOutput());
         	} catch (Exception f) {
         		//System.out.println("Cant do that dummy: " + f.get);
@@ -81,7 +81,7 @@ public class MeeshQuest {
             try {
 				XmlUtility.print(results);
 			} catch (TransformerException e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
         }
     }

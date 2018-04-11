@@ -14,6 +14,7 @@ public class QuadDistComp implements Comparator<QuadDist> {
 				//if they are both black nodes, we can compare city distances.
 				return (int) (o1.getBlackNodeDistance() - o2.getBlackNodeDistance());
 			}
+			
 			return 1; //if 2 quadrants are the same, just return the 1st one as better.
 		} else {
 			return (int) (dist1 - dist2);

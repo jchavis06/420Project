@@ -382,6 +382,7 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 //						deleteEntry(lastReturned);
 //						expectedModCount = modCount;
 //						lastReturned = null;
+						//throw new UnsupportedOperationException();
 						
 					}
 				};
@@ -405,11 +406,12 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 		
 		//From the part 2 spec
 		public boolean remove(Object o) {
-			@SuppressWarnings("unchecked")
-			Node me = (Node)o;
-			boolean b = Treap.this.containsKey(me.getKey());
-			Treap.this.remove(me.getKey());
-			return b;
+//			@SuppressWarnings("unchecked")
+//			Node me = (Node)o;
+//			boolean b = Treap.this.containsKey(me.getKey());
+//			Treap.this.remove(me.getKey());
+//			return b;
+			throw new UnsupportedOperationException();
 		}
 		
 		//From the part 2 spec
@@ -574,6 +576,10 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 				}
 			}
 			
+			@Override
+			public void remove() {
+				throw new UnsupportedOperationException();
+			}
 		}
 		
 		@Override
@@ -667,6 +673,9 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 			return Treap.this.tailMap(fromKey);
 		}
 	
+		public boolean remove() {
+			throw new UnsupportedOperationException();
+		}
 	
 	}
 	

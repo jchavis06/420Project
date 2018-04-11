@@ -15,6 +15,7 @@ public class Error implements XmlOutput{
 	private Document doc;
 	private String type;
 	private String command;
+	private Integer id;
 	private LinkedHashMap<String, String> params;
 	
 	public Error (Document doc, String type, String command) {
@@ -24,6 +25,13 @@ public class Error implements XmlOutput{
 		params = new LinkedHashMap<String, String>();
 	}
 	
+	public Error (Document doc, String type, String command, Integer id) {
+		this.doc = doc;
+		this.type = type;
+		this.command = command;
+		params = new LinkedHashMap<String, String>();
+		this.id = id;
+	}
 	public void addParam(String param, String value) {
 		params.put(param, value);
 	}
@@ -33,6 +41,9 @@ public class Error implements XmlOutput{
 		//doc.appendChild(elt);
 		Element com = doc.createElement("command");
 		elt.appendChild(com);
+		if (this.id != null) {
+			com.setAttribute("id", ""+id);
+		}
 		com.setAttribute("name", command);
 		elt.setAttribute("type", type);
 		Element parameters = doc.createElement("parameters");

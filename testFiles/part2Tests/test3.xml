@@ -1,77 +1,44 @@
 <commands
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- 	xsi:noNamespaceSchemaLocation="part2in.xsd"
- 	pmOrder="3" 
- 	spatialWidth="256" 
- 	spatialHeight="256">
- <createCity id="1"  name="Berlin" x="128" y="128" radius="0" color="red"/>
- <createCity id="2"  name="Geneva" x="90" y="70" radius="0" color="orange"/>
- <createCity id="3"  name="Madrid" radius="0" x="45" y="50" color="yellow"/>
- <createCity id="4"  name="Andorra" x="55" color="green" y="50" radius="0" />
- <createCity id="5"  name="London" x="70" y="140" radius="0" color="blue"/>
- <createCity id="6"  name="Edinburgh" x="70" y="165" radius="0" color="blue"/>
- <createCity id="7"  name="Athens" x="200" y="40" radius="0" color="blue"/>
- <createCity id="8"  name="Varna" x="210" y="100" radius="0" color="blue"/>
- <createCity id="9"  name="Moscow" x="220" y="220" radius="0" color="blue"/>
- <createCity id="10"  name="St_Petersburg" x="225" y="225" radius="0" color="blue"/>
- <createCity id="11"  name="Stockholm" x="140" y="190" radius="0" color="blue"/>
- <createCity id="12"  name="Paris" x="94" y="98" radius="0" color="blue"/>
- <createCity id="13"  name="Zurich" x="98" y="94" radius="0" color="blue"/>
- <createCity id="14"  name="Lisbon" x="20" y="20" radius="0" color="blue"/>
- <createCity id="15"  name="Seville" x="30" y="10" radius="0" color="blue"/>
- <createCity id="16"  name="Warsaw" x="200" y="150" radius="0" color="blue"/>
- <createCity id="17"  name="Nantes" x="75" y="80" radius="0" color="blue"/>
- <createCity id="18"  name="Brussels" x="100" y="105" radius="0" color="blue"/>
- <createCity id="19"  name="Amsterdam" x="110" y="118" radius="0" color="blue"/>
- <createCity id="20"  name="Kiev" x="240" y="95" radius="0" color="blue"/>
- <createCity id="21"  name="Coppenhagen" x="120" y="140" radius="0" color="blue"/>
- <createCity id="22"  name="Prague" x="130" y="100" radius="0" color="blue"/>
- <createCity id="23"  name="Milan" x="100" y="75" radius="0" color="blue"/>
- <createCity id="24"  name="Rome" x="50" y="120" radius="0" color="blue"/>
- <createCity id="25"  name="Minsk" x="200" y="160" radius="0" color="blue"/>
- <createCity id="26"  name="Istanbul" x="250" y="20" radius="0" color="blue"/>
- <createCity id="27"  name="Belgrade" x="75" y="220" radius="0" color="blue"/>
- <createCity id="28"  name="Helsinki" x="150" y="200" radius="0" color="blue"/>
- <createCity id="29"  name="Bergen" x="120" y="200" radius="0" color="blue"/>
- <createCity id="30"  name="Stavanger" x="120" y="190" radius="0" color="blue"/>
- <createCity id="31"  name="Oslo" x="130" y="190" radius="0" color="blue"/>
- <createCity id="32"  name="Trondheim" x="130" y="200" radius="0" color="blue"/>
+	xsi:noNamespaceSchemaLocation="part2in.xsd"
+	spatialWidth="1024"
+	spatialHeight="1024"
+	pmOrder="3">
 
- <mapRoad id="33"  start="Lisbon" end="Madrid"/>
- <mapRoad id="34"  start="Madrid" end="Andorra"/>
- <mapRoad id="35"  start="Milan" end="Paris"/>
- <mapRoad id="36"  start="Milan" end="Zurich"/>
- <mapRoad id="37"  start="Milan" end="Rome"/>
- <mapRoad id="38"  start="Paris" end="Zurich"/>
- <mapRoad id="39"  start="London" end="Edinburgh"/>
- <mapRoad id="40"  start="Paris" end="Berlin"/>
- <mapRoad id="41"  start="Berlin" end="Warsaw"/>
- <mapRoad id="42"  start="Milan" end="Andorra"/>
- <mapRoad id="43"  start="Milan" end="Athens"/>
- <mapRoad id="44"  start="Athens" end="Varna"/>
- <mapRoad id="45"  start="Stockholm" end="Minsk"/>
- <mapRoad id="46"  start="Moscow" end="Stockholm"/>
- <mapRoad id="47"  start="Moscow" end="Kiev"/>
- <mapRoad id="48"  start="Varna" end="Kiev"/>
- <mapRoad id="49"  start="Moscow" end="Helsinki"/>
-
+ <createCity name="A" x="140" y="37" radius="0" color="black"/>
+ <createCity name="B" x="133" y="34" radius="0" color="black"/>
+ <createCity name="C" x="200" y="300" radius="0" color="black"/>
+ <createCity name="D" x="1000" y="1000" radius="0" color="black"/>
+ <createCity name="E" x="500" y="400" radius="0" color="black"/>
+ <createCity name="F" x="450" y="450" radius="0" color="black"/>
+ <createCity name="G" x="4" y="4" radius="0" color="black"/>
+ <createCity name="H" x="8" y="8" radius="0" color="black"/>
+ <createCity name="I" x="16" y="16" radius="0" color="black"/>
+ <createCity name="J" x="12" y="12" radius="0" color="black"/>
+ <createCity name="K" x="-12" y="12" radius="0" color="black"/>
  
- <mapRoad id="52"  start="Varna" end="Moscow"/>
+ <mapRoad start="A" end="B"/>
+ <mapRoad start="C" end="B"/>
+ <mapRoad start="D" end="F"/>
+ <mapRoad start="E" end="B"/>
+ <mapRoad start="G" end="I"/>
+ <mapRoad start="H" end="J"/>
+ <mapRoad start="K" end="J"/>
+
+ <nearestCityToRoad start="A" end="B"/>
+ <nearestCityToRoad start="C" end="B"/>
+ <nearestCityToRoad start="D" end="F"/>
+ <nearestCityToRoad start="E" end="B"/>
+ <nearestCityToRoad start="G" end="I"/>
+ <nearestCityToRoad start="H" end="J"/>
+ <nearestCityToRoad start="K" end="J"/>
+ <nearestCityToRoad start="K" end="A"/>
+
+ <printPMQuadtree/> 
+ <clearAll/>
+ <nearestCityToRoad start="K" end="A"/>
+
+ <printPMQuadtree/> 
  
-
-<mapRoad start = "ABC" end ="Moscow"/>
-<mapRoad start = "Oslo" end ="ABC"/>
-<mapRoad start = "Oslo" end ="Oslo"/>
-
-<createCity  name="ABC" x="100" y="200" radius="10" color="blue"/>
-
-<mapRoad start = "ABC" end ="Moscow"/>
-<mapRoad start = "Moscow" end ="ABC"/>
-<createCity  name="XYZ" x="4010" y="2020" radius="10" color="blue"/>
-
-<createCity  name="DEF" x="4010" y="2020" radius="10" color="blue"/>
-<createCity  name="DEF" x="2450" y="2020" radius="10" color="blue"/>
-<mapCity name="XYZ"/>
-<nearestCity x= "20" y = "65"/>
-<nearestCity x= "120" y = "190"/>
+ 
 </commands>

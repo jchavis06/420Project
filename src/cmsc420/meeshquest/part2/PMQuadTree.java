@@ -46,6 +46,8 @@ public abstract class PMQuadTree {
 		Rectangle2D.Float rect = new Rectangle2D.Float();
 		rect.setRect(0,0, spatialHeight, spatialWidth);
 		this.rectangle = rect;
+		this.cityNames = new TreeMap<String, City>(new CityNameComparator());
+		this.cityCoordinates = new TreeMap<Point2D.Float, City>(new CityCoordinateComparator());
 	}
 	
 	public boolean isValid(){
@@ -68,7 +70,7 @@ public abstract class PMQuadTree {
 		if (cityCoordinates.containsKey(newCoord)) {
 			//dont add the city, this should be illegal.
 			//duplicate cityName
-			Error err = new Error(doc, "duplicateCityCoordinates", "createCity");
+			Error err = new Error(doc, "duplicateCityCoordinates", "createCity", id);
 			err.addParam("name", name);
 			err.addParam("x", "" + x);
 			err.addParam("y", "" + y);
@@ -78,7 +80,7 @@ public abstract class PMQuadTree {
 		} else {
 			if (cityNames.containsKey(name)) {
 				//duplicate coordinates.
-    			Error err = new Error(doc, "duplicateCityName", "createCity");
+    			Error err = new Error(doc, "duplicateCityName", "createCity", id);
     			err.addParam("name", name);
     			err.addParam("x", "" + x);
     			err.addParam("y", "" + y);
@@ -114,13 +116,13 @@ public abstract class PMQuadTree {
 			//out of bounds coordinates. (Different for PM Quadtree than point quadtree.
 			if (x < 0 || y < 0 || x > spatialWidth || y > spatialHeight) {
 				//Entering a city that is out of bounds.
-				Error err = new Error(doc, "cityOutOfBounds", "mapCity");
+				Error err = new Error(doc, "cityOutOfBounds", "mapCity", id);
 				err.addParam("name", cityName);
 				return err;
 			}
 			if (citiesMapped.contains(cityName)) {
 				//this means we tried adding a city that was already in the map.
-				Error e = new Error(doc, "cityAlreadyMapped", "mapCity");
+				Error e = new Error(doc, "cityAlreadyMapped", "mapCity", id);
 				e.addParam("name", cityName);
 				return e;
 			}
@@ -137,7 +139,7 @@ public abstract class PMQuadTree {
 			s.addParams("name", cityName);
 			return s;
 		} else {
-			Error e = new Error(doc, "nameNotInDictionary", "mapCity");
+			Error e = new Error(doc, "nameNotInDictionary", "mapCity", id);
 			e.addParam("name", cityName);
 			return e;
 			//this means we tried mapping a city that is not in the names dictionary.
@@ -164,7 +166,7 @@ public abstract class PMQuadTree {
 
 		if (cities.isEmpty()) {
 			//error: noCitiesToList
-			Error err = new Error(doc, "noCitiesToList", "listCities");
+			Error err = new Error(doc, "noCitiesToList", "listCities", id);
 			err.addParam("sortBy", sortBy);
 			return err;
 		} else {
@@ -215,13 +217,13 @@ public abstract class PMQuadTree {
 		City e = cityNames.get(end);
 		if (s == null) {
 			//error: startPointDoesNotExist
-			Error err = new Error(doc, "startPointDoesNotExist", "mapRoad");
+			Error err = new Error(doc, "startPointDoesNotExist", "mapRoad", id);
 			err.addParam("start", start);
 			err.addParam("end", end);
 			return err;
 		} else if (e == null) {
 			//error: endPointDoesNotExist
-			Error err = new Error(doc, "endPointDoesNotExist", "mapRoad");
+			Error err = new Error(doc, "endPointDoesNotExist", "mapRoad", id);
 			err.addParam("start", start);
 			err.addParam("end", end);
 			return err;
@@ -229,7 +231,7 @@ public abstract class PMQuadTree {
 		
 		if (start.equals(end)) {
 			//error: startEqualsEnd
-			Error err = new Error(doc, "startEqualsEnd", "mapRoad");
+			Error err = new Error(doc, "startEqualsEnd", "mapRoad", id);
 			err.addParam("start", start);
 			err.addParam("end", end);
 			return err;
@@ -237,7 +239,7 @@ public abstract class PMQuadTree {
 		
 		if (s.isIsolated() || e.isIsolated()) {
 			//error: startOrEndIsIsolated
-			Error err = new Error(doc, "startOrEndIsIsolated", "mapRoad");
+			Error err = new Error(doc, "startOrEndIsIsolated", "mapRoad", id);
 			err.addParam("start", start);
 			err.addParam("end", end);
 			return err;
@@ -245,7 +247,7 @@ public abstract class PMQuadTree {
 		
 		if (roadAlreadyMapped(start, end)) {
 			//error: roadAlreaadyMapped
-			Error err = new Error(doc, "roadAlreadyMapped", "mapRoad");
+			Error err = new Error(doc, "roadAlreadyMapped", "mapRoad", id);
 			err.addParam("start", start);
 			err.addParam("end", end);
 			return err;
@@ -253,7 +255,7 @@ public abstract class PMQuadTree {
 		
 		if (roadOutOfBounds(s, e)) {
 			//error: roadOutOfBounds
-			Error err = new Error(doc, "roadOutOfBounds", "mapRoad");
+			Error err = new Error(doc, "roadOutOfBounds", "mapRoad", id);
 			err.addParam("start", start);
 			err.addParam("end", end);
 			return err;
@@ -293,7 +295,7 @@ public abstract class PMQuadTree {
 	
 	public XmlOutput printPMQuadtree(Document doc, Integer id) {
 		if (spatialMap instanceof WhiteNode) {
-			Error e = new Error(doc, "mapIsEmpty", "printPMQuadtree");
+			Error e = new Error(doc, "mapIsEmpty", "printPMQuadtree",id);
 			return e;
 		} else {
 			Success s = new Success(doc, "printPMQuadtree", id);
@@ -319,7 +321,7 @@ PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
 		
 		Node root = this.spatialMap;
 		if (root instanceof WhiteNode) {
-			Error e = new Error(doc, "noCitiesExistInRange", "rangeCities");
+			Error e = new Error(doc, "noCitiesExistInRange", "rangeCities", id);
 			e.addParam("x", "" + x);
 			e.addParam("y", "" + y);
 			e.addParam("radius", "" + radius);
@@ -339,7 +341,7 @@ PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
 			Node n = qd.getNode();
 			if (n instanceof WhiteNode) {
 				//theres no cities within the range.
-				Error e = new Error(doc, "noCitiesExistInRange", "rangeCities");
+				Error e = new Error(doc, "noCitiesExistInRange", "rangeCities", id);
 				e.addParam("x", ""+x);
 				e.addParam("y", ""+y);
 				e.addParam("radius", ""+radius);
@@ -377,7 +379,7 @@ PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
 		if (otherSolution != null) {
 			PriorityQueue<QuadDist> pq1 = new PriorityQueue<QuadDist>(new QuadDistComp());
 			pq1.add(otherSolution);
-			
+			boolean firstTry = true;
 			while (! pq1.isEmpty()) {
 				QuadDist qd = pq1.poll();
 				Node n = qd.getNode();
@@ -391,12 +393,28 @@ PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
 						pq1.add(qd1);
 					}
 				} else if (n instanceof BlackNode) {
-					double distance = qd.getDist();
+					double distance = qd.getBlackNodeDistance();
+					if (distance == -1) {
+						QuadDist cont = pq.poll();
+						if (cont == null) {
+							break;
+						}
+						pq1.add(cont);
+						continue;
+					}
 					if (radius >= distance) {
 						//add to possible solutions
 						possibleSolutions.add(qd);
 					} else {
 						//we have looked at all of the possible solutions within radius.
+						if (firstTry) {
+							QuadDist cont = pq.poll();
+							if (cont == null) {
+								break;
+							}
+							pq1.add(cont);
+							continue;
+						}
 						break;
 					}
 					
@@ -413,7 +431,9 @@ PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
 		for (QuadDist qd: possibleSolutions) {
 			City c = ((BlackNode)qd.getNode()).getCity();
 			if (c != null) {
-				cities.add(c);
+				if (!cities.contains(c)) {
+					cities.add(c);
+				}
 			}
 		}
 		
@@ -422,7 +442,7 @@ PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
 		
 		
 		if (cities.isEmpty()) {
-			Error e = new Error(doc, "noCitiesExistInRange", "rangeCities");
+			Error e = new Error(doc, "noCitiesExistInRange", "rangeCities", id);
 			e.addParam("x", ""+x);
 			e.addParam("y", ""+y);
 			e.addParam("radius", ""+radius);
@@ -462,7 +482,7 @@ PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
 		}
 		
 		if (roadsInside.size() == 0) {
-			Error e = new Error(doc, "noRoadsExistInRange", "rangeRoads");
+			Error e = new Error(doc, "noRoadsExistInRange", "rangeRoads", id);
 			e.addParam("x", ""+x);
 			e.addParam("y", ""+y);
 			e.addParam("radius", ""+radius);
@@ -489,7 +509,7 @@ PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
 		Node root = this.spatialMap;
 		if (root instanceof WhiteNode) {
 			//white root means no cities have been added.
-			Error e = new Error(doc, "cityNotFound", "nearestCity");
+			Error e = new Error(doc, "cityNotFound", "nearestCity", id);
 			e.addParam("x", ""+x);
 			e.addParam("y", ""+y);
 			return e;
@@ -520,7 +540,7 @@ PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
 					break;
 				}
 			} else {
-				Error e = new Error(doc, "cityNotFound", "nearestCity");
+				Error e = new Error(doc, "cityNotFound", "nearestCity", id);
 				e.addParam("x", ""+x);
 				e.addParam("y", ""+y);
 				return e;
@@ -530,6 +550,7 @@ PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
 		if (possibleSolution != null) {
 			//need to only check the top of the PriorityQueue to make sure we have right answer.
 			QuadDist otherSolution = pq.poll();
+			boolean firstTry = true;
 			if (otherSolution == null) {
 				solution = ((BlackNode) (possibleSolution.getNode())).getCity();
 			} else {
@@ -544,31 +565,91 @@ PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
 						solution = ((BlackNode) (possibleSolution.getNode())).getCity();
 						break;
 					} else if (n instanceof BlackNode) {
-						
+						City c = ((BlackNode) n).getCity();
+						if (c == null || c.isIsolated()) {
+							solution = ((BlackNode) (possibleSolution.getNode())).getCity();
+							QuadDist cont = pq.poll();
+							if (cont == null) {
+								break;
+							}
+							pq1.add(cont);
+							continue;
+						}
 						double dist = qd.getBlackNodeDistance();
 						double psDist = possibleSolution.getBlackNodeDistance();
 						if (dist == -1) {
 							solution = ((BlackNode) (possibleSolution.getNode())).getCity();
 							QuadDist cont = pq.poll();
+							if (cont ==  null) {
+								break;
+							}
 							pq1.add(cont);
+							//firstTry = false;
 							continue;
 						} else if (psDist == dist) {
 							//dead tie on closest city. Pick city with name alphabetical order.
 							City cityA = ((BlackNode) (possibleSolution.getNode())).getCity();
 							City cityB = ((BlackNode) (qd.getNode())).getCity();
+							if (cityB.isIsolated()) {
+								solution = cityA;
+							}
 							if (cityA.getName().compareTo(cityB.getName()) > 0) {
 								solution = cityA;
 							} else {
 								solution = cityB;
 							}
+							break;
 						} else {
+							
 							if (psDist > dist) {
-								solution = ((BlackNode) (qd.getNode())).getCity();
+								c = ((BlackNode) (qd.getNode())).getCity();
+								if (!c.isIsolated()) {
+									solution = c;
+									if (firstTry) {
+										possibleSolution = qd;
+										firstTry = false;
+										QuadDist cont = pq.poll();
+										if (cont == null) {
+											break;
+										}
+										pq1.add(cont);
+										continue;
+									}
+									break;
+								} else {
+									solution = ((BlackNode) (possibleSolution.getNode())).getCity();
+									break;
+								}
 							} else {
 								solution = ((BlackNode) (possibleSolution.getNode())).getCity();
+								if (firstTry) {
+									firstTry = false;
+									QuadDist cont = pq.poll();
+									if (cont == null) {
+										break;
+									}
+									continue;
+								}
+								break;
 							}
+						
+//							if (firstTry) {
+//								//QuadDist cont = pq.poll();
+//								//pq1.add(cont);
+//								if (psDist > dist) {
+//									possibleSolution = qd;
+//								}
+//								solution = ((BlackNode) (possibleSolution.getNode())).getCity();
+//								firstTry = false;
+//								continue;
+//							}
+//							if (psDist > dist) {
+//								solution = ((BlackNode) (qd.getNode())).getCity();
+//							} else {
+//								solution = ((BlackNode) (possibleSolution.getNode())).getCity();
+//							}
 						}
-						break;
+						//break;
 						
 					} else if (n instanceof GrayNode) {
 						
@@ -597,14 +678,14 @@ PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
 				s.addOutputElement(city);
 				return s;
 			} else {
-				Error e = new Error(doc, "mapIsEmpty", "nearestCity");
+				Error e = new Error(doc, "mapIsEmpty", "nearestCity", id);
 				e.addParam("x", ""+x);
 				e.addParam("y", ""+y);
 				return e;
 			}
 		} else {
 			//probably only isolated cities found.
-			Error e = new Error(doc, "cityNotFound", "nearestCity");
+			Error e = new Error(doc, "cityNotFound", "nearestCity", id);
 			e.addParam("x", ""+x);
 			e.addParam("y", ""+y);
 			return e;
@@ -636,7 +717,7 @@ PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
 		}
 		
 		if (nearest == null) {
-			Error e = new Error(doc, "cityNotFound", "nearestIsolatedCity");
+			Error e = new Error(doc, "cityNotFound", "nearestIsolatedCity", id);
 			e.addParam("x", ""+x);
 			e.addParam("y", ""+y);
 			return e;
@@ -664,7 +745,7 @@ PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
 		float minDist = -1;
 		Road nearestRoad = null;
 		if (this.roads.size() == 0) {
-			Error e = new Error(doc, "roadNotFound", "nearestRoad");
+			Error e = new Error(doc, "roadNotFound", "nearestRoad", id);
 			e.addParam("x", ""+x);
 			e.addParam("y", ""+y);
 			return e;
@@ -705,7 +786,61 @@ PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
 	}
 	
 	public XmlOutput nearestCityToRoad(String start, String end, Document doc, Integer id) {
-		return null;
+		//loop through every city mapped and just get the shortest distance.
+		
+		//first need to make sure the road exists.
+		if (this.roadAlreadyMapped(start, end)) {
+			City cityA = this.treap.get(start);
+			City cityB = this.treap.get(end);
+			Line2D.Float line = new Line2D.Float(cityA.getX(), cityA.getY(), cityB.getX(), cityB.getY());
+			double shortestDist = -1;
+			City shortestCity = null;
+			for (String city: this.citiesMapped) {
+				City c = this.treap.get(city);
+				if (! c.equals(cityA) && !c.equals(cityB)) {
+					//double dist = Shape2DDistanceCalculator.distance(line, new Rectangle2D.Float(c.getX(),c.getY(), 0, 0));
+					double dist = line.ptSegDist(new Point2D.Float(c.getX(), c.getY()));
+					if (shortestDist == -1) {
+						shortestDist = dist;
+						shortestCity = c;
+					} else if (dist < shortestDist) {
+						shortestDist = dist;
+						shortestCity = c;
+					} else if (dist == shortestDist) {
+						//need to alphabetically compare the two names.
+						if (shortestCity.getName().compareTo(c.getName()) < 0) {
+							shortestDist = dist;
+							shortestCity = c;
+						}
+					}
+				}
+			}
+			
+			if (shortestCity != null) {
+				Element e = doc.createElement("city");
+				e.setAttribute("name", shortestCity.getName());
+				e.setAttribute("x", "" +shortestCity.getX());
+				e.setAttribute("y", "" +shortestCity.getY());
+				e.setAttribute("color",shortestCity.getColor());
+				e.setAttribute("radius", "" +shortestCity.getRadius());
+				Success s = new Success(doc, "nearestCityToRoad", id);
+				s.addParams("start", start);
+				s.addParams("end", end);
+				s.addOutputElement(e);
+				return s;
+			} else {
+				Error e = new Error(doc, "noOtherCitiesMapped", "nearestCityToRoad", id);
+				e.addParam("start", start);
+				e.addParam("end", end);
+				return e;
+			}
+			
+		} else {
+			Error e = new Error(doc, "roadIsNotMapped","nearestCityToRoad", id);
+			e.addParam("start",start);
+			e.addParam("end", end);
+			return e;
+		}
 	}
 	
 	public XmlOutput shortestPath(String start, String end, String saveMap, String saveHTML, Integer id) {
@@ -714,18 +849,18 @@ PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
 	
 	public void saveMap(String fileName) {
 		try {
-			CanvasPlus cp = new CanvasPlus();
-			cp.setFrameSize(spatialWidth, spatialHeight);
-			//cp.setFrameSize(100,100);
-			cp.addRectangle(0, 0, spatialWidth, spatialHeight, Color.WHITE, true);
-			//cp.addRectangle(0, 0, spatialWidth, spatialHeight, Color.BLACK, false);
-			//cp.addPoint("baltimore", 20, 20, Color.BLACK);
-			cp = spatialMap.drawMap(cp);
-			for(Road r: this.roads) {
-				Line2D.Float line = r.getLineSegment();
-				cp.addLine(line.getX1(), line.getY1(), line.getX2(), line.getY2(), Color.BLACK);
-			}
-			cp.save(fileName);
+//			CanvasPlus cp = new CanvasPlus();
+//			cp.setFrameSize(spatialWidth, spatialHeight);
+//			//cp.setFrameSize(100,100);
+//			cp.addRectangle(0, 0, spatialWidth, spatialHeight, Color.WHITE, true);
+//			//cp.addRectangle(0, 0, spatialWidth, spatialHeight, Color.BLACK, false);
+//			//cp.addPoint("baltimore", 20, 20, Color.BLACK);
+//			cp = spatialMap.drawMap(cp);
+//			for(Road r: this.roads) {
+//				Line2D.Float line = r.getLineSegment();
+//				cp.addLine(line.getX1(), line.getY1(), line.getX2(), line.getY2(), Color.BLACK);
+//			}
+//			cp.save(fileName);
 		
 		} catch (Exception e) {
 			//System.out.println("error: " + e.getMessage());
@@ -735,20 +870,20 @@ PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
 	
 	public void saveMap(String fileName, int x, int y, int radius) {
 		try {
-			CanvasPlus cp = new CanvasPlus();
-			cp.setFrameSize(spatialWidth, spatialHeight);
-			//cp.setFrameSize(100,100);
-			cp = spatialMap.drawMap(cp);
-			cp.addRectangle(0, 0, spatialWidth, spatialHeight, Color.BLACK, false);
-			//cp.addRectangle(0, 0, spatialWidth, spatialHeight, Color.BLACK, false);
-			//cp.addPoint("baltimore", 20, 20, Color.BLACK);
-			
-			for(Road r: this.roads) {
-				Line2D.Float line = r.getLineSegment();
-				cp.addLine(line.getX1(), line.getY1(), line.getX2(), line.getY2(), Color.BLACK);
-			}
-			cp.addCircle(x, y, radius, Color.BLUE, false);
-			cp.save(fileName);
+//			CanvasPlus cp = new CanvasPlus();
+//			cp.setFrameSize(spatialWidth, spatialHeight);
+//			//cp.setFrameSize(100,100);
+//			cp = spatialMap.drawMap(cp);
+//			cp.addRectangle(0, 0, spatialWidth, spatialHeight, Color.BLACK, false);
+//			//cp.addRectangle(0, 0, spatialWidth, spatialHeight, Color.BLACK, false);
+//			//cp.addPoint("baltimore", 20, 20, Color.BLACK);
+//			
+//			for(Road r: this.roads) {
+//				Line2D.Float line = r.getLineSegment();
+//				cp.addLine(line.getX1(), line.getY1(), line.getX2(), line.getY2(), Color.BLACK);
+//			}
+//			cp.addCircle(x, y, radius, Color.BLUE, false);
+//			cp.save(fileName);
 		
 		} catch (Exception e) {
 			//System.out.println("error: " + e.getMessage());
@@ -791,6 +926,12 @@ PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
 		
 		public Node addRoad(Road r, int startX, int startY, int height, int width) {
 			BlackNode b = new BlackNode(startX, startY, height, width);
+			b.addRoad(r);
+			return b;
+		}
+		
+		public Node addRoad(Road r) {
+			BlackNode b = new BlackNode(0, 0, spatialHeight, spatialWidth);
 			b.addRoad(r);
 			return b;
 		}
@@ -1146,6 +1287,7 @@ PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
 		//for PMQuadTrees a black node can be in multiple quadrants.
 		public ArrayList<Integer> getDesiredQuadrants(int x, int y, int midX, int midY) {
 			ArrayList<Integer> list = new ArrayList<Integer>();
+
 			if (x == midX && y == midY) {
 				//all four quadrants;
 				list.add(1);

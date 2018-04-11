@@ -45,13 +45,13 @@ public class testTreap {
 //		}
 		
 		SortedMap<Integer,Integer> map = new Treap<Integer, Integer>();
-		SortedMap<Integer,Integer> rb = new TreeMap<Integer, Integer>();
-		map.put(1,1);
-		rb.put(1,1);
-		System.out.println(map.equals(rb));
-		System.out.println(rb.equals(map));
-		System.out.println(map.toString().equals(rb.toString()));
-		System.out.println(map.hashCode() == rb.hashCode());
+		SortedMap<Integer,Integer> sub = map.subMap(2, 5);
+		map.put(2, 3);
+		map.put(54, 43);
+		map.put(4, 3);
+		map.put(3, 4);
+		System.out.println(sub.size());
+		System.out.println(sub.size());
 	} 
 	
 	public static class IntegerComp implements Comparator<Integer> {
