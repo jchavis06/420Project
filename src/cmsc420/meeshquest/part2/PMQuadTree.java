@@ -563,7 +563,13 @@ PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
 					if (n instanceof WhiteNode) {
 						
 						solution = ((BlackNode) (possibleSolution.getNode())).getCity();
-						break;
+						QuadDist cont = pq.poll();
+						if (cont == null) {
+							break;
+						}
+						pq1.add(cont);
+						continue;
+						//break;
 					} else if (n instanceof BlackNode) {
 						City c = ((BlackNode) n).getCity();
 						if (c == null || c.isIsolated()) {
@@ -713,6 +719,11 @@ PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
 			} else if (temp < dist) {
 				dist = temp;
 				nearest = c;
+			} else if (temp == dist) {
+				if (c.getName().compareTo(nearest.getName()) > 0) {
+					dist = temp;
+					nearest = c;
+				}
 			}
 		}
 		
@@ -849,18 +860,18 @@ PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
 	
 	public void saveMap(String fileName) {
 		try {
-//			CanvasPlus cp = new CanvasPlus();
-//			cp.setFrameSize(spatialWidth, spatialHeight);
-//			//cp.setFrameSize(100,100);
-//			cp.addRectangle(0, 0, spatialWidth, spatialHeight, Color.WHITE, true);
-//			//cp.addRectangle(0, 0, spatialWidth, spatialHeight, Color.BLACK, false);
-//			//cp.addPoint("baltimore", 20, 20, Color.BLACK);
-//			cp = spatialMap.drawMap(cp);
-//			for(Road r: this.roads) {
-//				Line2D.Float line = r.getLineSegment();
-//				cp.addLine(line.getX1(), line.getY1(), line.getX2(), line.getY2(), Color.BLACK);
-//			}
-//			cp.save(fileName);
+			CanvasPlus cp = new CanvasPlus();
+			cp.setFrameSize(spatialWidth, spatialHeight);
+			//cp.setFrameSize(100,100);
+			cp.addRectangle(0, 0, spatialWidth, spatialHeight, Color.WHITE, true);
+			//cp.addRectangle(0, 0, spatialWidth, spatialHeight, Color.BLACK, false);
+			//cp.addPoint("baltimore", 20, 20, Color.BLACK);
+			cp = spatialMap.drawMap(cp);
+			for(Road r: this.roads) {
+				Line2D.Float line = r.getLineSegment();
+				cp.addLine(line.getX1(), line.getY1(), line.getX2(), line.getY2(), Color.BLACK);
+			}
+			cp.save(fileName);
 		
 		} catch (Exception e) {
 			//System.out.println("error: " + e.getMessage());
@@ -870,20 +881,20 @@ PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
 	
 	public void saveMap(String fileName, int x, int y, int radius) {
 		try {
-//			CanvasPlus cp = new CanvasPlus();
-//			cp.setFrameSize(spatialWidth, spatialHeight);
-//			//cp.setFrameSize(100,100);
-//			cp = spatialMap.drawMap(cp);
-//			cp.addRectangle(0, 0, spatialWidth, spatialHeight, Color.BLACK, false);
-//			//cp.addRectangle(0, 0, spatialWidth, spatialHeight, Color.BLACK, false);
-//			//cp.addPoint("baltimore", 20, 20, Color.BLACK);
-//			
-//			for(Road r: this.roads) {
-//				Line2D.Float line = r.getLineSegment();
-//				cp.addLine(line.getX1(), line.getY1(), line.getX2(), line.getY2(), Color.BLACK);
-//			}
-//			cp.addCircle(x, y, radius, Color.BLUE, false);
-//			cp.save(fileName);
+			CanvasPlus cp = new CanvasPlus();
+			cp.setFrameSize(spatialWidth, spatialHeight);
+			//cp.setFrameSize(100,100);
+			cp = spatialMap.drawMap(cp);
+			cp.addRectangle(0, 0, spatialWidth, spatialHeight, Color.BLACK, false);
+			//cp.addRectangle(0, 0, spatialWidth, spatialHeight, Color.BLACK, false);
+			//cp.addPoint("baltimore", 20, 20, Color.BLACK);
+			
+			for(Road r: this.roads) {
+				Line2D.Float line = r.getLineSegment();
+				cp.addLine(line.getX1(), line.getY1(), line.getX2(), line.getY2(), Color.BLACK);
+			}
+			cp.addCircle(x, y, radius, Color.BLUE, false);
+			cp.save(fileName);
 		
 		} catch (Exception e) {
 			//System.out.println("error: " + e.getMessage());

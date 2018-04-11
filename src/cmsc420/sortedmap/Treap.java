@@ -118,6 +118,11 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 		}
 		return null;
 	}
+	
+	public void clear() {
+		this.size = 0;
+		this.root = null;
+	}
 	/*
 	 * Will recursively add node into the treap
 	 * Returns the node at the end so we can use it and re-heapify.

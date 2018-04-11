@@ -24,8 +24,8 @@ public class MeeshQuest {
     	//String testFile = "testFiles\\part2Tests\\part2.public.range.input.xml";
     	String testFile = "testFiles//part2Tests//test3.xml";
         try {
-        	Document doc = XmlUtility.validateNoNamespace(System.in);
-        	//Document doc = XmlUtility.validateNoNamespace(new File(testFile));
+        	//Document doc = XmlUtility.validateNoNamespace(System.in);
+        	Document doc = XmlUtility.validateNoNamespace(new File(testFile));
         	results = XmlUtility.getDocumentBuilder().newDocument();
         
         	Element commandNode = doc.getDocumentElement();
