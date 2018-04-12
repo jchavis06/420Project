@@ -15,43 +15,46 @@ public class testTreap {
 	public static void main(String args[]) {
 
 		
-//		Treap<Integer, Integer> treap = new Treap<Integer, Integer>();
-//		TreeMap<Integer, Integer> treeMap = new TreeMap<Integer, Integer>();
-//		treap.put(1, 2);
-//		treap.put(3,4);
-//		treap.put(5,6);
-//		treap.put(7, 8);
-//		treap.put(9, 10);
-//		
-//		treeMap.put(1, 2);
-//		treeMap.put(3,4);
-//		treeMap.put(5,6);
-//		treeMap.put(7, 8);
-//		treeMap.put(9, 10);
-//		
-//		Set<Map.Entry<Integer,Integer>> treapSet = treap.entrySet();
-//		Set<Map.Entry<Integer,Integer>> treeMapSet = treeMap.entrySet();
-//		Iterator<Map.Entry<Integer,Integer>> treapIt = treapSet.iterator();
-//		Iterator<Map.Entry<Integer,Integer>> treeMapIt = treeMapSet.iterator();
-//		
-//		System.out.println(treapSet);
-//		System.out.println(treeMapSet);
-//		while (treapIt.hasNext() && treeMapIt.hasNext()) {
-//			Entry val1 = treapIt.next();
-//			Entry val2 = treeMapIt.next();
-//			System.out.println(val1.equals(val2));
-//			System.out.println(val1.hashCode() == val2.hashCode());
-//			System.out.println("-----");
-//		}
+		SortedMap<Integer, Integer> treap = new Treap<Integer, Integer>();
+		SortedMap<Integer, Integer> treeMap = new TreeMap<Integer, Integer>();
+		treap.put(5, 4);
+		treap.put(10,11);
+		SortedMap<Integer, Integer> subTreap = treap.subMap(6, 11);
+		treap.put(7, 4);
+		treap.put(123, 343);
+		subTreap.put(8, 22);
 		
-		SortedMap<Integer,Integer> map = new Treap<Integer, Integer>();
-		SortedMap<Integer,Integer> sub = map.subMap(2, 5);
-		map.put(2, 3);
-		map.put(54, 43);
-		map.put(4, 3);
-		map.put(3, 4);
-		System.out.println(sub.size());
-		System.out.println(sub.size());
+		
+		treeMap.put(5, 4);
+		treeMap.put(10,11);
+		SortedMap<Integer, Integer> subTreeMap = treeMap.subMap(6, 11);
+		treeMap.put(7, 4);
+		treeMap.put(123, 343);
+		subTreeMap.put(8, 22);
+		System.out.println("Size treap: " + treap.size());
+		System.out.println("Size treeMap: " + treeMap.size());
+		System.out.println("Equals treap?: " + treap.equals(treeMap));
+		System.out.println("Equals subs?: " + subTreeMap.equals(subTreap));
+		System.out.println("Size sub treap: " + subTreap.size());
+		System.out.println("Size sub treemap: " + subTreeMap.size());
+		Set<Entry<Integer, Integer>> treapSubSet = subTreap.entrySet();
+		Set<Entry<Integer, Integer>> treeMapSubSet = subTreeMap.entrySet();
+		System.out.println("Size entry treap: " + treapSubSet.size());
+		System.out.println("Size entry treeMap: " + subTreeMap.size());
+		
+		
+		System.out.println("Equals entry set: " + treapSubSet.equals(treeMapSubSet));
+		System.out.println("HashCode entry set: " + (treapSubSet.hashCode() == treeMapSubSet.hashCode()));
+		
+		System.out.println("HashCode treap : " + (treap.hashCode() == treeMap.hashCode()));
+		System.out.println("Hash code submap: " + (subTreap.hashCode() == subTreeMap.hashCode()));
+		
+		//Iterator<Entry> subTreapIt = treapSubSet.iterator();
+		//Iterator<Entry> subTreeMapIt = treeMapSubSet.iterator();
+		
+		System.out.println(subTreap);
+		System.out.println("-----");
+		System.out.println(subTreeMap);
 	} 
 	
 	public static class IntegerComp implements Comparator<Integer> {

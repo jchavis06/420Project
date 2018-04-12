@@ -19,7 +19,8 @@ public class QuadDist {
 		this.pointX = pointX;
 		this.pointY = pointY;
 		this.n = n;
-		this.distance = Shape2DDistanceCalculator.distance(new Point2D.Float((float) pointX, (float) pointY), rect);
+		Point2D.Float point = new Point2D.Float(pointX, pointY);
+		this.distance = Shape2DDistanceCalculator.distance(point, rect);
 	}
 	
 	public QuadDist(Rectangle2D.Float rect, Line2D.Float lineSeg, Node n) {
@@ -49,20 +50,22 @@ public class QuadDist {
 		
 		double distance;
 		if (this.lineSeg != null) {
-			//calc distance from point to a line.
-			float x1 = (float)lineSeg.getX1();
-			float y1 = (float)lineSeg.getY1();
-			float x2 = (float)lineSeg.getX2();
-			float y2 = (float)lineSeg.getY2();
-			
-			float pX = (float)c.getX();
-			float pY = (float)c.getY();
-			
-			float numerator = Math.abs(((y2 - y1)*(pX)) - ((x2 - x1)*(pY)) + (x2*y1) - (y2*x1));
-			float denominator = (float)Math.sqrt((Math.pow((y2 - y1),2) + Math.pow((x2-x1),2)));
-			
-			distance = numerator / denominator;
+			distance = this.lineSeg.ptSegDist(new Point2D.Float(x,y));
+//			//calc distance from point to a line.
+//			float x1 = (float)lineSeg.getX1();
+//			float y1 = (float)lineSeg.getY1();
+//			float x2 = (float)lineSeg.getX2();
+//			float y2 = (float)lineSeg.getY2();
+//			
+//			float pX = (float)c.getX();
+//			float pY = (float)c.getY();
+//			
+//			float numerator = Math.abs(((y2 - y1)*(pX)) - ((x2 - x1)*(pY)) + (x2*y1) - (y2*x1));
+//			float denominator = (float)Math.sqrt((Math.pow((y2 - y1),2) + Math.pow((x2-x1),2)));
+//			
+//			distance = numerator / denominator;
 		} else {
+			//distance = this.distance;
 			distance = Point2D.distance((float) pointX, (float) pointY, (float) x, (float) y);
 		}
 		

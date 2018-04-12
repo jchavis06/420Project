@@ -21,7 +21,7 @@ public class MeeshQuest {
     public static void main(String[] args) {
     	
     	Document results = null;
-    	//String testFile = "testFiles\\part2Tests\\part2.public.range.input.xml";
+    	//String testFile = "testFiles\\part2Tests\\part2.public.treap.input.xml";
     	String testFile = "testFiles//part2Tests//test3.xml";
         try {
         	//Document doc = XmlUtility.validateNoNamespace(System.in);

@@ -57,25 +57,59 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 	@Override
 	public V put(K key, V value) {
 		//make sure key isnt already in treap.
-		if (this.containsKey(key)) {
-			//if it does, this shouldnt be called (call contains before this method).
-			//throw new IllegalArgumentException();
-			Node curr = this.getEntry(key);
-			V prev = curr.value;
-			curr.setValue(value);
-			return prev;
-		} else {
-			Node node = new Node(key, value);
-			//newNode is the node after insertion, that way we can re-heapify with parents.
-			Node newNode = insertNodeIntoTreap(this.root, node);
-			//System.out.println(newNode.getPriority());
-			if (! (this.root.equals(node))) {
-				//not the first element inserted.
+//		if (this.containsKey(key)) {
+//			//if it does, this shouldnt be called (call contains before this method).
+//			//throw new IllegalArgumentException();
+//			Node curr = this.getEntry(key);
+//			V prev = curr.value;
+//			curr.setValue(value); 
+//			return prev;
+//		} else {
+//			Node node = new Node(key, value);
+//			//newNode is the node after insertion, that way we can re-heapify with parents.
+//			Node newNode = insertNodeIntoTreap(this.root, node);
+//			if (newNode.value != node.value) {
+//				//we had a duplicate key....
+//				V val = newNode.value;
+//				newNode.setValue(value);
+//				return val;
+//			}
+//			//System.out.println(newNode.getPriority());
+//			if (! (this.size == 0)) {
+//				//not the first element inserted.
+//				reheapify(newNode);
+//			}
+//			this.size ++;
+//			return newNode.getValue();
+			
+			
+			
+			Node newNode = insertNodeIntoTreap(this.root, key, value);
+			if (newNode.value != value) {
+				//entered a duplicate value.
+				V val = newNode.value;
+				newNode.setValue(value);
+				return val;
+			}
+			
+			if (! (this.size == 0)) {
 				reheapify(newNode);
 			}
+			
 			this.size ++;
 			return newNode.getValue();
-		}
+		
+//		Node node = new Node(key, value); 
+//		//newNode is the node after insertion, that way we can re-heapify with parents. 
+//		Node newNode = insertNodeIntoTreap(this.root, node); 
+//		//System.out.println(newNode.getPriority()); 
+//		if (! (this.root.equals(node))) { 
+//		//not the first element inserted. 
+//			reheapify(newNode); 
+//		} 
+//	    this.size ++; 
+//		return newNode.getValue(); 
+		//}
 	}
 
 	public V get(Object key) {
@@ -123,39 +157,50 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 		this.size = 0;
 		this.root = null;
 	}
+	
+	public boolean isEmpty() {
+		return (this.size == 0);
+	}
 	/*
 	 * Will recursively add node into the treap
 	 * Returns the node at the end so we can use it and re-heapify.
 	 */
-	private Node insertNodeIntoTreap(Node root, Node node) {
+	private Node insertNodeIntoTreap(Node root, K key, V val) {
 		if (this.root == null) {
+			Node node = new Node(key, val);
 			this.root = node;
 			return node;
 		}
 		
 		int leftOrRight;
-		leftOrRight = compare(node.key, root.key);
+		leftOrRight = compare(key, root.key);
 		
 		if (leftOrRight < 0) {
 			//insert new node into left tree.
 			if (root.left != null) {
-				return insertNodeIntoTreap(root.left, node);
+				return insertNodeIntoTreap(root.left, key, val);
 			} else {
 				//new node will be left of root.
+				Node node = new Node(key, val);
 				node.parent = root;
 				root.left = node;
 				return node;
 			}
-		} else {
+		} else if (leftOrRight > 0){
 			//insert new node into right tree.
 			if (root.right != null) {
-				return insertNodeIntoTreap(root.right, node);
+				return insertNodeIntoTreap(root.right, key, val);
 			} else {
 				//new node will be right of root
+				Node node = new Node(key, val);
 				node.parent = root;
 				root.right = node;
 				return node;
 			}
+		} else {
+			//this node is a duplicate.... set the new value and return old value.
+			//root.setValue(node.value);
+			return root;
 		}
 	}
 	
@@ -332,20 +377,91 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 	}
 	protected class EntrySet extends AbstractSet<Map.Entry<K, V>> implements Set<Map.Entry<K, V>> {
 
-		private Iterator <Map.Entry<K, V>> iterator;
-		
+		private K fromKey, toKey;
+		private boolean isSubMap;
 		public EntrySet() {
-			this.iterator = null;
+			this.isSubMap = false;
 		}
+
 		
-		public EntrySet(Iterator<Map.Entry<K, V>> iterator) {
-			this.iterator = iterator;
+		public EntrySet(K fromKey, K toKey) {
+			this.fromKey = fromKey;
+			this.toKey = toKey;
+			this.isSubMap = true;
 		}
 		
 		@Override
 		public Iterator <Map.Entry<K, V>> iterator() {
-			if (this.iterator != null) {
-				return this.iterator;
+			if (this.isSubMap) {
+				//now we know that there is a range in which there are values.
+				//need to get first element to be between bounds.
+				return new Iterator<Map.Entry<K,V>> () {
+					Node next;
+					Node first = Treap.this.getFirstEntry();
+					boolean justStarted = true;
+					
+					private void getFirstElement() {
+						if (first == null) {
+							this.next = null;
+							return;
+						}
+							
+							
+						while (Treap.this.compare(first.getKey(), fromKey) < 0) {
+							first = successor(first);
+							if (first == null) {
+								break;
+							}
+						}
+								
+						if (first == null) {
+							this.next = null;
+						} else {
+							//now we need to make sure first key isnt greater than toKey.
+							if (Treap.this.compare (first.getKey(), toKey) >= 0) {
+								this.next = null;
+							} else {
+								this.next = first;
+							}
+						}
+					}
+				
+					
+					@Override
+					public boolean hasNext() {
+						if (this.justStarted && next == null) {
+							this.getFirstElement();
+							justStarted = false;
+						}
+						
+						if (this.next == null) {
+							return false;
+						}
+						K key = next.getKey();
+						//if element is greater than toKey, we are out of bounds for submap.
+						if (compare(key, toKey) >= 0) {
+							return false; 
+						} else {
+							return true;
+						}
+					}
+	
+					@Override
+					public Entry<K, V> next() {
+						Node element = this.next;
+						if (element != null) {
+							this.next = successor(element);
+							return element;
+						} else {
+							throw new NoSuchElementException();
+						}
+					}
+					
+					@Override
+					public void remove() {
+						throw new UnsupportedOperationException();
+					}
+				};
 			} else {
 				return new Iterator<Map.Entry<K,V>>() {
 					private Node lastReturned = null;
@@ -396,17 +512,13 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 
 		@Override
 		public int size() {
-			//if this is a submap, we need to iterate over this ourselves.
-			if (this.iterator != null) {
-				Iterator<Map.Entry<K,V>> it = this.iterator;
-				int count = 0;
-				while (it.hasNext()) {
-					it.next(); //we dont even need to save the next val, we just want it to move on.
-					count ++;
-				}
-				return count;
+			Iterator<Map.Entry<K, V>> it = this.iterator();
+			int count = 0;
+			while (it.hasNext()) {
+				it.next(); //we dont even need to save the next val, we just want it to move on.
+				count ++;
 			}
-			return Treap.this.size;
+			return count;
 		}
 		
 		//From the part 2 spec
@@ -419,22 +531,68 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 			throw new UnsupportedOperationException();
 		}
 		
-		//From the part 2 spec
-		public boolean contains(Object o) {
-			@SuppressWarnings("unchecked")
-			Node me = (Node)o;
-			return Treap.this.containsKey(me.getKey())
-					&& (me.getValue() == null ? 
-							Treap.this.get(me.getKey()) == null :
-							me.getValue().equals(Treap.this.get(me.getKey())));
-			
-		}
+//		//From the part 2 spec
+//		public boolean contains(Object o) {
+//			@SuppressWarnings("unchecked")
+//			Node me = (Node)o;
+//			return Treap.this.containsKey(me.getKey())
+//					&& (me.getValue() == null ? 
+//							Treap.this.get(me.getKey()) == null :
+//							me.getValue().equals(Treap.this.get(me.getKey())));
+//			
+//		}
 
+		public boolean equals(Object o) {
+			System.out.println("here");
+			if (o == this) {
+				return true;
+			}
+			//System.out.println(o.equals(this));
+			//System.out.println(o.getClass());
+			if (!(o instanceof Set)) {
+				System.out.println("0");
+				return false;
+			}
+			Set<Entry<K,V>> m = (Set<Entry<K,V>>) o;
+			if (m.size() != size()) {
+				System.out.println("Returning false 1");
+				return false;
+			}
+
+			try {
+				Iterator<Entry<K,V>> i = entrySet().iterator();
+				while (i.hasNext()) {
+					Entry<K,V> e = i.next();
+					System.out.println(e);
+					K key = e.getKey();
+					V value = e.getValue();
+					if (value == null) {
+						if ((m.contains(key))) {
+							System.out.println("Returning false 2");
+							return false;
+						}
+					} else {
+//						
+//						if (!value.equals(m.get(key))) {
+//							System.out.println("Returning false 3");
+//							return false;
+//						}
+					}
+				}
+			}
+			catch (ClassCastException unused) {
+				return false;
+			} catch (NullPointerException unused) {
+				return false;
+			}
+			return true;
+		}
+		
 		
 	}
 	
 	
-	protected class Node extends AbstractMap.SimpleEntry<K, V> {
+	protected class Node extends AbstractMap.SimpleEntry<K, V> implements Map.Entry<K, V>{
 
 		private K key;
 		private V value;
@@ -592,7 +750,8 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 		
 		@Override
 		public Set<Map.Entry<K, V>> entrySet() {
-			return new EntrySet(new SubMapIterator());
+			//return new EntrySet(new SubMapIterator());
+			return new EntrySet(this.fromKey, this.toKey);
 		}
 		
 		/**
@@ -625,6 +784,11 @@ public class Treap<K, V> extends AbstractMap<K,V> implements SortedMap<K,V>{
 				//out of bounds key. Should we throw an exception???
 				throw new IllegalArgumentException();
 			}
+		}
+		
+		public int size() {
+			Set<Map.Entry<K, V>>es = this.entrySet();
+			return es.size();
 		}
 	
 		public K firstKey() {

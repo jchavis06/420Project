@@ -213,8 +213,11 @@ public abstract class PMQuadTree {
 	}
 	
 	public XmlOutput mapRoad(String start, String end, Document doc, Integer id) {
-		City s = cityNames.get(start);
-		City e = cityNames.get(end);
+		
+		boolean sb = this.cityNames.containsKey(start);
+		boolean eb = this.cityNames.containsKey(end);
+		City s = this.cityNames.get(start);
+		City e = this.cityNames.get(end);
 		if (s == null) {
 			//error: startPointDoesNotExist
 			Error err = new Error(doc, "startPointDoesNotExist", "mapRoad", id);
@@ -351,9 +354,15 @@ PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
 				return e;
 			} else if (n instanceof GrayNode) {
 				for (Node child: ((GrayNode) n).getChildren()) {
-					if (child instanceof WhiteNode) {
-						//we dont want to add a white node into the priority queue.
-					} else {
+					if (!(child instanceof WhiteNode)) {
+						if (child instanceof BlackNode) {
+							City c = ((BlackNode)child).getCity();
+							if (c != null) {
+								Rectangle2D.Float r = child.getRect();
+								QuadDist qd1 = new QuadDist(r, x, y, child);
+								pq.add(qd1);
+							}
+						}
 						Rectangle2D.Float r = child.getRect();
 						QuadDist qd1 = new QuadDist(r, x, y, child);
 						pq.add(qd1);
@@ -388,9 +397,22 @@ PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
 					break;
 				} else if (n instanceof GrayNode) {
 					for (Node child: ((GrayNode) n).getChildren()) {
-						Rectangle2D.Float r = child.getRect();
-						QuadDist qd1 = new QuadDist(r, x, y, child);
-						pq1.add(qd1);
+						if (!(child instanceof WhiteNode)) {
+							if (child instanceof BlackNode) {
+								City c = ((BlackNode) child).getCity();
+								if (!(c == null)) {
+									Rectangle2D.Float r = child.getRect();
+									QuadDist qd1 = new QuadDist(r, x, y, child);
+									pq1.add(qd1);
+								}
+							} else {
+								Rectangle2D.Float r = child.getRect();
+								QuadDist qd1 = new QuadDist(r, x, y, child);
+								pq1.add(qd1);
+							}
+							
+						}
+						
 					}
 				} else if (n instanceof BlackNode) {
 					double distance = qd.getBlackNodeDistance();
@@ -529,9 +551,21 @@ PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
 				//break;
 			} else if (n instanceof GrayNode) {
 				for (Node child: ((GrayNode) n).getChildren()) {
-					Rectangle2D.Float r = child.getRect();
-					QuadDist qd1 = new QuadDist(r, x, y, child);
-					pq.add(qd1);
+					if (!(child instanceof WhiteNode)) {
+						if (child instanceof BlackNode) {
+							City c = ((BlackNode) child).getCity();
+							if (!(c == null || c.isIsolated())) {
+								Rectangle2D.Float r = child.getRect();
+								QuadDist qd1 = new QuadDist(r, x, y, child);
+								pq.add(qd1);
+							}
+						} else {
+							Rectangle2D.Float r = child.getRect();
+							QuadDist qd1 = new QuadDist(r, x, y, child);
+							pq.add(qd1);
+						}
+						
+					}		
 				}
 			} else if (n instanceof BlackNode) {
 				City c = ((BlackNode) n).getCity();
@@ -563,81 +597,112 @@ PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
 					if (n instanceof WhiteNode) {
 						
 						solution = ((BlackNode) (possibleSolution.getNode())).getCity();
-						QuadDist cont = pq.poll();
-						if (cont == null) {
-							break;
-						}
-						pq1.add(cont);
-						continue;
-						//break;
+//						QuadDist cont = pq.poll();
+//						if (cont == null) {
+//							break;
+//						}
+//						pq1.add(cont);
+//						continue;
+						break;
 					} else if (n instanceof BlackNode) {
-						City c = ((BlackNode) n).getCity();
-						if (c == null || c.isIsolated()) {
-							solution = ((BlackNode) (possibleSolution.getNode())).getCity();
-							QuadDist cont = pq.poll();
-							if (cont == null) {
-								break;
-							}
-							pq1.add(cont);
-							continue;
-						}
+						
 						double dist = qd.getBlackNodeDistance();
 						double psDist = possibleSolution.getBlackNodeDistance();
-						if (dist == -1) {
-							solution = ((BlackNode) (possibleSolution.getNode())).getCity();
-							QuadDist cont = pq.poll();
-							if (cont ==  null) {
-								break;
-							}
-							pq1.add(cont);
-							//firstTry = false;
-							continue;
-						} else if (psDist == dist) {
-							//dead tie on closest city. Pick city with name alphabetical order.
+						if (psDist == dist) {
+							//dead tie on closest city.
 							City cityA = ((BlackNode) (possibleSolution.getNode())).getCity();
 							City cityB = ((BlackNode) (qd.getNode())).getCity();
-							if (cityB.isIsolated()) {
-								solution = cityA;
-							}
 							if (cityA.getName().compareTo(cityB.getName()) > 0) {
 								solution = cityA;
 							} else {
 								solution = cityB;
 							}
-							break;
+							//solution = ((BlackNode) (possibleSolution.getNode())).getCity();
 						} else {
-							
 							if (psDist > dist) {
-								c = ((BlackNode) (qd.getNode())).getCity();
-								if (!c.isIsolated()) {
-									solution = c;
-									if (firstTry) {
-										possibleSolution = qd;
-										firstTry = false;
-										QuadDist cont = pq.poll();
-										if (cont == null) {
-											break;
-										}
-										pq1.add(cont);
-										continue;
-									}
-									break;
-								} else {
-									solution = ((BlackNode) (possibleSolution.getNode())).getCity();
-									break;
-								}
+								solution = ((BlackNode) (qd.getNode())).getCity();
 							} else {
 								solution = ((BlackNode) (possibleSolution.getNode())).getCity();
 								if (firstTry) {
-									firstTry = false;
 									QuadDist cont = pq.poll();
 									if (cont == null) {
 										break;
 									}
+									pq1.add(cont);
+									firstTry = false;
 									continue;
 								}
-								break;
 							}
+						}
+						break;
+					} else if (n instanceof GrayNode) {
+//						City c = ((BlackNode) n).getCity();
+//						if (c == null || c.isIsolated()) {
+//							solution = ((BlackNode) (possibleSolution.getNode())).getCity();
+//							QuadDist cont = pq.poll();
+//							if (cont == null) {
+//								break;
+//							}
+//							pq1.add(cont);
+//							continue;
+//						}
+//						double dist = qd.getBlackNodeDistance();
+//						double psDist = possibleSolution.getBlackNodeDistance();
+//						if (dist == -1) {
+//							solution = ((BlackNode) (possibleSolution.getNode())).getCity();
+//							QuadDist cont = pq.poll();
+//							if (cont ==  null) {
+//								break;
+//							}
+//							pq1.add(cont);
+//							//firstTry = false;
+//							continue;
+//						} else if (psDist == dist) {
+//							//dead tie on closest city. Pick city with name alphabetical order.
+//							City cityA = ((BlackNode) (possibleSolution.getNode())).getCity();
+//							City cityB = ((BlackNode) (qd.getNode())).getCity();
+//							if (cityB.isIsolated()) {
+//								solution = cityA;
+//							}
+//							if (cityA.getName().compareTo(cityB.getName()) > 0) {
+//								solution = cityA;
+//							} else {
+//								solution = cityB;
+//							}
+//							break;
+//						} else {
+//							
+//							if (psDist > dist) {
+//								c = ((BlackNode) (qd.getNode())).getCity();
+//								if (!c.isIsolated()) {
+//									solution = c;
+//									if (firstTry) {
+//										possibleSolution = qd;
+//										firstTry = false;
+//										QuadDist cont = pq.poll();
+//										if (cont == null) {
+//											break;
+//										}
+//										pq1.add(cont);
+//										continue;
+//									}
+//									break;
+//								} else {
+//									solution = ((BlackNode) (possibleSolution.getNode())).getCity();
+//									break;
+//								}
+//							} else {
+//								solution = ((BlackNode) (possibleSolution.getNode())).getCity();
+//								if (firstTry) {
+//									firstTry = false;
+//									QuadDist cont = pq.poll();
+//									if (cont == null) {
+//										break;
+//									}
+//									continue;
+//								}
+//								break;
+//							}
 						
 //							if (firstTry) {
 //								//QuadDist cont = pq.poll();
@@ -656,13 +721,24 @@ PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
 //							}
 						}
 						//break;
-						
-					} else if (n instanceof GrayNode) {
+					
 						
 						for (Node child: ((GrayNode) n).getChildren()) {
-							Rectangle2D.Float r = child.getRect();
-							QuadDist qd1 = new QuadDist(r, x, y, child);
-							pq1.add(qd1);
+							if (!(child instanceof WhiteNode)) {
+								if (child instanceof BlackNode) {
+									City c = ((BlackNode) child).getCity();
+									if (!(c == null || c.isIsolated())) {
+										Rectangle2D.Float r = child.getRect();
+										QuadDist qd1 = new QuadDist(r, x, y, child);
+										pq1.add(qd1);
+									}
+								} else {
+									Rectangle2D.Float r = child.getRect();
+									QuadDist qd1 = new QuadDist(r, x, y, child);
+									pq1.add(qd1);
+								}
+								
+							}
 						}
 						
 					}
@@ -684,18 +760,18 @@ PriorityQueue<QuadDist> pq = new PriorityQueue<QuadDist>(new QuadDistComp());
 				s.addOutputElement(city);
 				return s;
 			} else {
-				Error e = new Error(doc, "mapIsEmpty", "nearestCity", id);
+				Error e = new Error(doc, "cityNotFound", "nearestCity", id);
 				e.addParam("x", ""+x);
 				e.addParam("y", ""+y);
 				return e;
 			}
-		} else {
-			//probably only isolated cities found.
-			Error e = new Error(doc, "cityNotFound", "nearestCity", id);
-			e.addParam("x", ""+x);
-			e.addParam("y", ""+y);
-			return e;
-		}
+//		} else {
+//			//probably only isolated cities found.
+//			Error e = new Error(doc, "cityNotFound", "nearestCity", id);
+//			e.addParam("x", ""+x);
+//			e.addParam("y", ""+y);
+//			return e;
+//		}
 	}
 	
 	public XmlOutput nearestIsolatedCity(int x, int y, Document doc, Integer id) {
