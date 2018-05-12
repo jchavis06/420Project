@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<results>
+  <success>
+    <command id="1" name="createCity"/>
+    <parameters>
+      <name value="Baltimore"/>
+      <localX value="76"/>
+      <localY value="39"/>
+      <remoteX value="6"/>
+      <remoteY value="6"/>
+      <radius value="0"/>
+      <color value="black"/>
+    </parameters>
+    <output/>
+  </success>
+  <success>
+    <command id="2" name="createCity"/>
+    <parameters>
+      <name value="Chicago"/>
+      <localX value="81"/>
+      <localY value="47"/>
+      <remoteX value="6"/>
+      <remoteY value="6"/>
+      <radius value="0"/>
+      <color value="black"/>
+    </parameters>
+    <output/>
+  </success>
+  <success>
+    <command id="8" name="mapRoad"/>
+    <parameters>
+      <start value="Baltimore"/>
+      <end value="Chicago"/>
+    </parameters>
+    <output>
+      <roadCreated end="Chicago" start="Baltimore"/>
+    </output>
+  </success>
+  <success>
+    <command id="11" name="mapAirport"/>
+    <parameters>
+      <name value="BWI"/>
+      <localX value="12"/>
+      <localY value="44"/>
+      <remoteX value="6"/>
+      <remoteY value="6"/>
+      <terminalName value="terminalB"/>
+      <terminalX value="13"/>
+      <terminalY value="30"/>
+      <terminalCity value="Baltimore"/>
+    </parameters>
+    <output/>
+  </success>
+  <success>
+    <command id="12" name="mapTerminal"/>
+    <parameters>
+      <name value="terminalA"/>
+      <localX value="13"/>
+      <localY value="15"/>
+      <remoteX value="6"/>
+      <remoteY value="6"/>
+      <cityName value="Baltimore"/>
+      <airportName value="BWI"/>
+    </parameters>
+    <output/>
+  </success>
+  <success>
+    <command id="13" name="printPMQuadtree"/>
+    <parameters>
+      <remoteX value="6"/>
+      <remoteY value="6"/>
+    </parameters>
+    <output>
+      <quadtree order="3">
+        <gray x="128" y="128">
+          <white/>
+          <white/>
+          <gray x="64" y="64">
+            <white/>
+            <white/>
+            <gray x="32" y="32">
+              <black cardinality="2">
+                <airport localX="12.0" localY="44.0" name="BWI" remoteX="6.0" remoteY="6.0"/>
+                <road end="terminalB" start="Baltimore"/>
+              </black>
+              <black cardinality="2">
+                <road end="terminalB" start="Baltimore"/>
+                <road end="terminalA" start="Baltimore"/>
+              </black>
+              <gray x="16" y="16">
+                <black cardinality="3">
+                  <terminal airportName="BWI" cityName="Baltimore" localX="13.0" localY="30.0" name="terminalB" remoteX="6.0" remoteY="6.0"/>
+                  <road end="terminalB" start="Baltimore"/>
+                  <road end="terminalA" start="Baltimore"/>
+                </black>
+                <black cardinality="2">
+                  <road end="terminalB" start="Baltimore"/>
+                  <road end="terminalA" start="Baltimore"/>
+                </black>
+                <black cardinality="2">
+                  <terminal airportName="BWI" cityName="Baltimore" localX="13.0" localY="15.0" name="terminalA" remoteX="6.0" remoteY="6.0"/>
+                  <road end="terminalA" start="Baltimore"/>
+                </black>
+                <white/>
+              </gray>
+              <black cardinality="1">
+                <road end="terminalA" start="Baltimore"/>
+              </black>
+            </gray>
+            <gray x="96" y="32">
+              <gray x="80" y="48">
+                <white/>
+                <white/>
+                <black cardinality="4">
+                  <city color="black" localX="76.0" localY="39.0" name="Baltimore" radius="0" remoteX="6.0" remoteY="6.0"/>
+                  <road end="terminalB" start="Baltimore"/>
+                  <road end="terminalA" start="Baltimore"/>
+                  <road end="Chicago" start="Baltimore"/>
+                </black>
+                <black cardinality="2">
+                  <city color="black" localX="81.0" localY="47.0" name="Chicago" radius="0" remoteX="6.0" remoteY="6.0"/>
+                  <road end="Chicago" start="Baltimore"/>
+                </black>
+              </gray>
+              <white/>
+              <white/>
+              <white/>
+            </gray>
+          </gray>
+          <white/>
+        </gray>
+      </quadtree>
+    </output>
+  </success>
+</results>

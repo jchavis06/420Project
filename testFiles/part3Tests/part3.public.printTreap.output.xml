@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<results>
+  <success>
+    <command id="1" name="createCity"/>
+    <parameters>
+      <name value="Baltimore"/>
+      <localX value="140"/>
+      <localY value="37"/>
+      <remoteX value="1"/>
+      <remoteY value="0"/>
+      <radius value="0"/>
+      <color value="black"/>
+    </parameters>
+    <output/>
+  </success>
+  <success>
+    <command id="2" name="createCity"/>
+    <parameters>
+      <name value="Chicago"/>
+      <localX value="133"/>
+      <localY value="834"/>
+      <remoteX value="1"/>
+      <remoteY value="0"/>
+      <radius value="0"/>
+      <color value="black"/>
+    </parameters>
+    <output/>
+  </success>
+  <success>
+    <command id="3" name="createCity"/>
+    <parameters>
+      <name value="New_York"/>
+      <localX value="200"/>
+      <localY value="300"/>
+      <remoteX value="1"/>
+      <remoteY value="0"/>
+      <radius value="0"/>
+      <color value="black"/>
+    </parameters>
+    <output/>
+  </success>
+  <success>
+    <command id="4" name="createCity"/>
+    <parameters>
+      <name value="Zurich"/>
+      <localX value="1000"/>
+      <localY value="1000"/>
+      <remoteX value="0"/>
+      <remoteY value="2"/>
+      <radius value="0"/>
+      <color value="black"/>
+    </parameters>
+    <output/>
+  </success>
+  <success>
+    <command id="5" name="createCity"/>
+    <parameters>
+      <name value="Paris"/>
+      <localX value="500"/>
+      <localY value="400"/>
+      <remoteX value="0"/>
+      <remoteY value="2"/>
+      <radius value="0"/>
+      <color value="black"/>
+    </parameters>
+    <output/>
+  </success>
+  <success>
+    <command id="6" name="createCity"/>
+    <parameters>
+      <name value="Amsterdam"/>
+      <localX value="450"/>
+      <localY value="450"/>
+      <remoteX value="0"/>
+      <remoteY value="2"/>
+      <radius value="0"/>
+      <color value="black"/>
+    </parameters>
+    <output/>
+  </success>
+  <success>
+    <command id="7" name="printTreap"/>
+    <parameters/>
+    <output>
+      <treap cardinality="6">
+        <node key="Amsterdam" priority="1673208352" value="(450,450)">
+          <node key="Paris" priority="1531807082" value="(500,400)">
+            <node key="Zurich" priority="898973342" value="(1000,1000)">
+              <emptyChild/>
+              <emptyChild/>
+            </node>
+            <node key="Baltimore" priority="139901049" value="(140,37)">
+              <node key="New_York" priority="-256354225" value="(200,300)">
+                <emptyChild/>
+                <node key="Chicago" priority="-1905598039" value="(133,834)">
+                  <emptyChild/>
+                  <emptyChild/>
+                </node>
+              </node>
+              <emptyChild/>
+            </node>
+          </node>
+          <emptyChild/>
+        </node>
+      </treap>
+    </output>
+  </success>
+</results>

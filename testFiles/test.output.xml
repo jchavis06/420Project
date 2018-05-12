@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<results>
+  <success>
+    <command id="1" name="createCity"/>
+    <parameters>
+      <name value="Baltimore"/>
+      <localX value="76"/>
+      <localY value="39"/>
+      <remoteX value="6"/>
+      <remoteY value="12"/>
+      <radius value="0"/>
+      <color value="black"/>
+      <city color="black" localX="76.0" localY="39.0" name="Baltimore" radius="0" remoteX="6.0" remoteY="12.0"/>
+    </parameters>
+    <output/>
+  </success>
+  <success>
+    <command id="2" name="createCity"/>
+    <parameters>
+      <name value="Chicago"/>
+      <localX value="81"/>
+      <localY value="47"/>
+      <remoteX value="6"/>
+      <remoteY value="12"/>
+      <radius value="0"/>
+      <color value="black"/>
+      <city color="black" localX="81.0" localY="47.0" name="Chicago" radius="0" remoteX="6.0" remoteY="12.0"/>
+    </parameters>
+    <output/>
+  </success>
+  <success>
+    <command id="3" name="createCity"/>
+    <parameters>
+      <name value="Atlanta"/>
+      <localX value="84"/>
+      <localY value="33"/>
+      <remoteX value="6"/>
+      <remoteY value="6"/>
+      <radius value="0"/>
+      <color value="black"/>
+      <city color="black" localX="84.0" localY="33.0" name="Atlanta" radius="0" remoteX="6.0" remoteY="6.0"/>
+    </parameters>
+    <output/>
+  </success>
+  <success>
+    <command id="4" name="createCity"/>
+    <parameters>
+      <name value="Los_Angeles"/>
+      <localX value="118"/>
+      <localY value="33"/>
+      <remoteX value="6"/>
+      <remoteY value="6"/>
+      <radius value="0"/>
+      <color value="black"/>
+      <city color="black" localX="118.0" localY="33.0" name="Los_Angeles" radius="0" remoteX="6.0" remoteY="6.0"/>
+    </parameters>
+    <output/>
+  </success>
+  <success>
+    <command id="5" name="createCity"/>
+    <parameters>
+      <name value="Miami"/>
+      <localX value="80"/>
+      <localY value="25"/>
+      <remoteX value="6"/>
+      <remoteY value="6"/>
+      <radius value="0"/>
+      <color value="black"/>
+      <city color="black" localX="80.0" localY="25.0" name="Miami" radius="0" remoteX="6.0" remoteY="6.0"/>
+    </parameters>
+    <output/>
+  </success>
+  <success>
+    <command id="6" name="createCity"/>
+    <parameters>
+      <name value="Boston"/>
+      <localX value="71"/>
+      <localY value="42"/>
+      <remoteX value="6"/>
+      <remoteY value="6"/>
+      <radius value="0"/>
+      <color value="black"/>
+      <city color="black" localX="71.0" localY="42.0" name="Boston" radius="0" remoteX="6.0" remoteY="6.0"/>
+    </parameters>
+    <output/>
+  </success>
+  <success>
+    <command id="7" name="listCities"/>
+    <parameters>
+      <sortBy value="coordinate"/>
+    </parameters>
+    <output>
+      <cityList>
+        <city color="black" localX="71" localY="42" name="Boston" radius="0" remoteX="6" remoteY="6"/>
+        <city color="black" localX="80" localY="25" name="Miami" radius="0" remoteX="6" remoteY="6"/>
+        <city color="black" localX="118" localY="33" name="Los_Angeles" radius="0" remoteX="6" remoteY="6"/>
+        <city color="black" localX="84" localY="33" name="Atlanta" radius="0" remoteX="6" remoteY="6"/>
+        <city color="black" localX="81" localY="47" name="Chicago" radius="0" remoteX="6" remoteY="12"/>
+        <city color="black" localX="76" localY="39" name="Baltimore" radius="0" remoteX="6" remoteY="12"/>
+      </cityList>
+    </output>
+  </success>
+  <error type="roadOutOfBounds">
+    <command id="8" name="mapRoad"/>
+    <parameters>
+      <start value="Baltimore"/>
+      <end value="Chicago"/>
+    </parameters>
+  </error>
+  <error type="roadOutOfBounds">
+    <command id="9" name="mapRoad"/>
+    <parameters>
+      <start value="Atlanta"/>
+      <end value="Los_Angeles"/>
+    </parameters>
+  </error>
+  <error type="roadOutOfBounds">
+    <command id="10" name="mapRoad"/>
+    <parameters>
+      <start value="Miami"/>
+      <end value="Boston"/>
+    </parameters>
+  </error>
+  <error type="airportOutOfBounds"/>
+  <success>
+    <command id="11" name="mapAirport"/>
+    <parameters>
+      <name value="bwi"/>
+      <localX value="12"/>
+      <localY value="44"/>
+      <remoteX value="6"/>
+      <remoteY value="6"/>
+      <terminalName value="terminalB"/>
+      <terminalX value="13"/>
+      <terminalY value="30"/>
+      <terminalCity value="Baltimore"/>
+      <airport localX="12.0" localY="44.0" name="bwi" remoteX="6.0" remoteY="6.0"/>
+    </parameters>
+    <output/>
+  </success>
+</results>

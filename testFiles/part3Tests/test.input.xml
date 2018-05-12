@@ -1,0 +1,33 @@
+<commands 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	localSpatialHeight="256" 
+	localSpatialWidth="256" 
+	pmOrder="3" 
+	remoteSpatialHeight="16" 
+	remoteSpatialWidth="16" 
+	xsi:noNamespaceSchemaLocation="part3in.xsd">
+	
+<!--	
+ <createCity id="1" name="Baltimore" remoteX="6" remoteY="6" localY="39" localX="76" radius="0" color="black"/>
+ <createCity id="2" name="Chicago" remoteX="6" remoteY="6" localX="81" localY="47" radius="0"  color="black"/>
+ <createCity id="3" name="Atlanta" remoteX="6" remoteY="6" localX="84" localY="33" radius="0"  color="black"/>
+ <createCity id="4" name="Los_Angeles" remoteX="6" remoteY="6" localX="118" localY="33" radius="0"  color="black"/>
+ <createCity id="5" name="Miami" remoteX="6" remoteY="6" localX="80" localY="25" radius="0"  color="black"/>
+ <createCity id="6" name="Boston" remoteX="6" remoteY="6" localX="71" localY="42" radius="0"  color="black"/>
+ <listCities id="7" sortBy="coordinate"/>
+
+ <mapRoad id="8" start="Baltimore" end="Chicago"/>
+ <mapRoad id="9" start="Atlanta" end="Los_Angeles"/>
+ <mapRoad id="10" start="Miami" end="Boston"/>
+ 
+
+
+ <mapAirport id="11" name="BWI" remoteX="6" remoteY="6" localX="12" localY="44" terminalName="terminalB" terminalX="13" terminalY="30" terminalCity="Baltimore"/>
+ <mapTerminal id="12" name="terminalA" remoteX="6" remoteY="6" localX="13" localY="15" airportName="BWI" cityName="Baltimore"/>
+ <printPMQuadtree id="13" remoteX="6" remoteY="6"/>
+
+-->
+
+<createCity id="1" name="Bmore" remoteX="6" remoteY="6" localX="39" localY="76" radius="0" color="black"/>
+<mapAirport id="2" name="BWI" remoteX="6" remoteY="6" localX="39" localY="76" terminalName="terminalB" terminalX="13" terminalY="30" terminalCity="Bmore"/>
+</commands>
